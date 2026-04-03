@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CaptionBuddy | AI Content for Local Business</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #0d0d0d;
+            --surface-color: #1a1a1a;
+            --surface-light: #262626;
+            --accent-color: #25D366; /* WhatsApp Green */
+            --text-main: #ffffff;
+            --text-dim: #a0a0a0;
+            --transition-speed: 0.3s;
+            
+            /* Content Type Colors */
+            --whatsapp: #25D366;
+            --instagram: #E4405F;
+            --festival: #FFD700;
+            --new-arrival: #007AFF;
+            --review: #AF52DE;
+            --reset: #FF3B30;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            letter-spacing: 1px;
+        }
+
+        /* --- UI COMPONENTS --- */
+        .btn {
+            background: var(--accent-color);
+            color: black;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: transform 0.2s, opacity 0.2s;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn:active { transform: scale(0.98); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .input-group { margin-bottom: 20px; }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            background: var(--surface-light);
+            border: 1px solid #333;
+            color: white;
+            padding: 14px;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            50% { transform: translateX(8px); }
+            75% { transform: translateX(-8px); }
+        }
+        .shake { animation: shake 0.3s ease-in-out; border-color: #ff3b30 !important; }
+
+        /* --- LAYOUT & SCREENS --- */
+        nav {
+            padding: 1.5rem;
+            border-bottom: 1px solid #222;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: var(--bg-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo { font-size: 1.8rem; color: white; margin-bottom: 4px; }
+        .tagline { font-size: 0.8rem; color: var(--text-dim); font-weight: 500; }
+
+        .container { max-width: 600px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+        .screen { display: none; animation: fadeIn 0.4s ease-out; }
+        .screen.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- DASHBOARD --- */
+        .dash-header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+        }
+        .history-trigger {
+            background: var(--surface-light);
+            border: 1px solid #333;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .usage-text-dash {
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+
+        .grid-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+        .card {
+            background: var(--surface-color);
+            padding: 1.5rem;
+            border-radius: 18px;
+            text-align: center;
+            cursor: pointer;
+            border: 1px solid #333;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .card:hover { 
+            border-color: var(--accent-color); 
+            background: #222; 
+            transform: translateY(-5px); 
+        }
+        .card-icon {
+            font-size: 1.5rem; height: 50px; width: 50px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 12px; margin-bottom: 4px;
+        }
+        .card h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9rem; }
+
+        /* --- GENERATOR --- */
+        .gen-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .back-btn { background: none; border: none; color: var(--accent-color); font-weight: 600; cursor: pointer; padding: 0; }
+        .usage-badge {
+            background: #222; padding: 4px 12px; border-radius: 20px;
+            font-size: 0.75rem; border: 1px solid #444;
+        }
+        .pill-container { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+        .pill {
+            padding: 8px 16px; border-radius: 20px; background: var(--surface-light);
+            border: 1px solid #333; font-size: 0.85rem; cursor: pointer; color: var(--text-dim); transition: all 0.2s;
+        }
+        .pill.active { background: var(--accent-color); color: black; border-color: var(--accent-color); font-weight: 600; }
+
+        /* --- OUTPUT --- */
+        .output-container { margin-top: 2rem; }
+        .output-card {
+            background: var(--surface-color); border: 1px solid #333;
+            border-radius: 15px; padding: 1.5rem; margin-bottom: 16px; position: relative;
+        }
+        .output-text { font-size: 0.95rem; color: #eee; white-space: pre-wrap; margin-bottom: 1rem; }
+        
+        .char-count {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .card-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .action-btn {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-dim);
+            border: 1px solid #444;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .action-btn:hover { background: rgba(255, 255, 255, 0.1); color: white; border-color: white; }
+        .action-btn.copy { color: var(--accent-color); border-color: var(--accent-color); background: rgba(37, 211, 102, 0.05); }
+
+        /* --- HISTORY LIST --- */
+        .history-item {
+            background: var(--surface-color);
+            border: 1px solid #333;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .hist-meta h4 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.95rem; margin-bottom: 2px;}
+        .hist-meta p { font-size: 0.75rem; color: var(--text-dim); }
+        .hist-preview { font-size: 0.85rem; color: #bbb; margin-top: 6px; font-style: italic; }
+
+        /* --- TOAST --- */
+        #toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #fff;
+            color: #000;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            z-index: 2000;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+        #toast.show { transform: translateX(-50%) translateY(0); }
+
+        /* --- LOADING & SHIMMER --- */
+        #loading-indicator { display: none; text-align: center; margin-bottom: 1rem; }
+        .loading-text { font-weight: 600; color: var(--accent-color); margin-bottom: 8px; display: block; }
+        .shimmer {
+            height: 100px;
+            background: linear-gradient(90deg, #1a1a1a 25%, #262626 50%, #1a1a1a 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 15px;
+            margin-bottom: 10px;
+        }
+        @keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+        /* --- MODAL --- */
+        .modal-overlay {
+            position: fixed; top:0; left:0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); z-index: 1000;
+            display: none; align-items: center; justify-content: center; padding: 20px;
+        }
+        .modal {
+            background: var(--surface-color); border: 2px solid var(--accent-color);
+            padding: 2.5rem; border-radius: 32px; max-width: 400px; text-align: center;
+        }
+
+        @media (max-width: 400px) { .grid-container { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">✍️ CaptionBuddy</div>
+        <div class="tagline">Content for your business in seconds</div>
+    </nav>
+
+    <main class="container">
+        
+        <!-- SETUP SCREEN -->
+        <section id="screen-setup" class="screen">
+            <div class="card" style="padding: 2.5rem; cursor: default; border: 1px solid #333;">
+                <h2 style="font-size: 2rem; margin-bottom: 1rem;">Set Up Your Business</h2>
+                <div class="input-group" style="text-align: left; width: 100%;">
+                    <label>Business Name</label>
+                    <input type="text" id="biz-name" placeholder="e.g. Royal Punjab Restaurant">
+                </div>
+                <div class="input-group" style="text-align: left; width: 100%;">
+                    <label>Business Type</label>
+                    <select id="biz-type">
+                        <option value="Restaurant">Restaurant</option>
+                        <option value="Salon">Salon / Spa</option>
+                        <option value="Gym">Gym & Fitness</option>
+                        <option value="Boutique">Fashion Boutique</option>
+                        <option value="General Shop">Retail Shop</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="input-group" style="text-align: left; width: 100%;">
+                    <label>Default Language</label>
+                    <select id="biz-lang">
+                        <option value="English">English</option>
+                        <option value="Hindi">Hindi</option>
+                        <option value="Hinglish">Hinglish</option>
+                    </select>
+                </div>
+                <button class="btn" onclick="saveSetup()">Set Up My Business →</button>
+            </div>
+        </section>
+
+        <!-- DASHBOARD -->
+        <section id="screen-dashboard" class="screen">
+            <div class="dash-header-flex">
+                <div class="welcome-header">
+                    <p style="color: var(--accent-color); font-weight: 600;">Welcome back,</p>
+                    <h2 id="display-biz-name" style="font-size: 2.2rem; line-height: 1;">Business Name</h2>
+                    <div class="usage-text-dash" id="usage-dash">Free: 9/9 left</div>
+                </div>
+                <button class="history-trigger" onclick="showHistory()">📋 History</button>
+            </div>
+
+            <div class="grid-container">
+                <div class="card" onclick="openGenerator('WhatsApp Broadcast', '📱')">
+                    <div class="card-icon" style="background: rgba(37, 211, 102, 0.1); color: var(--whatsapp);">📱</div>
+                    <h3>WhatsApp Broadcast</h3>
+                </div>
+                <div class="card" onclick="openGenerator('Instagram Caption', '📸')">
+                    <div class="card-icon" style="background: rgba(228, 64, 95, 0.1); color: var(--instagram);">📸</div>
+                    <h3>Instagram Caption</h3>
+                </div>
+                <div class="card" onclick="openGenerator('Festival/Offer Post', '🎉')">
+                    <div class="card-icon" style="background: rgba(255, 215, 0, 0.1); color: var(--festival);">🎉</div>
+                    <h3>Festival/Offer</h3>
+                </div>
+                <div class="card" onclick="openGenerator('New Arrival', '🆕')">
+                    <div class="card-icon" style="background: rgba(0, 122, 255, 0.1); color: var(--new-arrival);">🆕</div>
+                    <h3>New Arrival</h3>
+                </div>
+                <div class="card" onclick="openGenerator('Review Reply', '⭐')">
+                    <div class="card-icon" style="background: rgba(175, 82, 222, 0.1); color: var(--review);">⭐</div>
+                    <h3>Review Reply</h3>
+                </div>
+                <div class="card" onclick="resetApp()" style="border-style: dashed;">
+                    <div class="card-icon" style="background: rgba(255, 59, 48, 0.1); color: var(--reset);">🔄</div>
+                    <h3>Reset Business</h3>
+                </div>
+            </div>
+        </section>
+
+        <!-- HISTORY SCREEN -->
+        <section id="screen-history" class="screen">
+            <div class="gen-header">
+                <button class="back-btn" onclick="showDashboard()">← Back</button>
+                <h3 style="font-size: 1.5rem;">Your History</h3>
+            </div>
+            <div id="history-list">
+                <!-- History items injected here -->
+            </div>
+            <button class="action-btn" style="width:100%; margin-top: 2rem; padding: 15px;" onclick="clearHistory()">🗑️ Clear All History</button>
+        </section>
+
+        <!-- GENERATOR -->
+        <section id="screen-generator" class="screen">
+            <div class="gen-header">
+                <button class="back-btn" onclick="showDashboard()">← Back</button>
+                <span class="usage-badge" id="usage-text-gen">Free: 9/9 left</span>
+            </div>
+
+            <h2 id="selected-type-title" style="font-size: 2rem; margin-bottom: 1.5rem;">Content Type</h2>
+
+            <div class="input-group">
+                <label>What's the post about?</label>
+                <textarea id="prompt-input" rows="3" placeholder="Describe your post in one line..."></textarea>
+            </div>
+
+            <label>Tone</label>
+            <div class="pill-container" id="tone-pills">
+                <div class="pill active" onclick="selectPill(this, 'tone')">Professional</div>
+                <div class="pill" onclick="selectPill(this, 'tone')">Friendly</div>
+                <div class="pill" onclick="selectPill(this, 'tone')">Exciting</div>
+                <div class="pill" onclick="selectPill(this, 'tone')">Festive</div>
+            </div>
+
+            <label>Language</label>
+            <div class="pill-container" id="lang-pills">
+                <div class="pill" onclick="selectPill(this, 'lang')">English</div>
+                <div class="pill" onclick="selectPill(this, 'lang')">Hindi</div>
+                <div class="pill active" onclick="selectPill(this, 'lang')">Hinglish</div>
+            </div>
+
+            <button class="btn" onclick="handleGeneration()" id="gen-btn">Generate Content ✨</button>
+
+            <div id="results-area" class="output-container">
+                <div id="loading-indicator">
+                    <span class="loading-text">✍️ Writing your content...</span>
+                    <div class="shimmer"></div>
+                    <div class="shimmer"></div>
+                    <div class="shimmer"></div>
+                </div>
+
+                <div id="ai-results-wrapper">
+                    <!-- Cards injected here -->
+                </div>
+
+                <button id="copy-all-btn" class="btn" style="background: #333; color: white; margin-top: 1rem; display: none;" onclick="copyAll()">📋 Copy All 3 Variations</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- TOAST -->
+    <div id="toast">✅ Copied to clipboard!</div>
+
+    <!-- MODAL -->
+    <div class="modal-overlay" id="upgrade-modal">
+        <div class="modal">
+            <h2 style="font-size: 2.2rem; margin-bottom: 10px;">You're on a roll! 🚀</h2>
+            <p style="color: var(--text-dim); margin-bottom: 25px;">You've used all 9 free generations. Upgrade to Pro for unlimited content for your business.</p>
+            <button class="btn" onclick="contactPro()">💬 WhatsApp Us for Pro</button>
+            <button class="back-btn" style="margin-top: 15px; width: 100%; color: #888;" onclick="closeModal()">Maybe later</button>
+        </div>
+    </div>
+
+    <script>
+        // --- CONFIGURATION ---
+        const GROQ_API_KEY = "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"; 
+        const WHATSAPP_PRO_NUMBER = "918076514639"; 
+        const MAX_FREE_USES = 9;
+
+        // --- STATE ---
+        let lastInputState = { type: "", desc: "", tone: "", lang: "" };
+
+        const bizData = () => JSON.parse(localStorage.getItem('captionBuddyBiz'));
+        const getUsage = () => parseInt(localStorage.getItem('cb_uses_count')) || 0;
+        const getHistory = () => JSON.parse(localStorage.getItem('cb_history')) || [];
+
+        window.onload = () => {
+            updateUsageUI();
+            if (bizData()) showDashboard();
+            else navigateTo('screen-setup');
+        };
+
+        function navigateTo(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            window.scrollTo(0,0);
+        }
+
+        function showDashboard() {
+            document.getElementById('display-biz-name').innerText = bizData().name;
+            updateUsageUI();
+            navigateTo('screen-dashboard');
+        }
+
+        function updateUsageUI() {
+            const used = getUsage();
+            const rem = Math.max(0, MAX_FREE_USES - used);
+            const text = `Free: ${rem}/${MAX_FREE_USES} left`;
+            
+            const genBadge = document.getElementById('usage-text-gen');
+            const dashBadge = document.getElementById('usage-dash');
+            
+            genBadge.innerText = text;
+            dashBadge.innerText = text;
+
+            let color = "#25D366"; // Green
+            if (rem <= 3) color = "#FFD700"; // Yellow
+            if (rem === 0) color = "#FF3B30"; // Red
+
+            genBadge.style.borderColor = color;
+            genBadge.style.color = color;
+            dashBadge.style.color = color;
+        }
+
+        function selectPill(el, group) {
+            el.parentElement.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        function saveSetup() {
+            const name = document.getElementById('biz-name').value;
+            const type = document.getElementById('biz-type').value;
+            const lang = document.getElementById('biz-lang').value;
+            if (!name) return alert("Please enter business name");
+            localStorage.setItem('captionBuddyBiz', JSON.stringify({ name, type, lang }));
+            showDashboard();
+        }
+
+        // --- TOAST SYSTEM ---
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.innerText = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2000);
+        }
+
+        // --- HISTORY SYSTEM ---
+        function saveToHistory(type, desc, variations, tone, lang) {
+            const history = getHistory();
+            const entry = {
+                type, desc, variations, tone, lang,
+                bizName: bizData().name,
+                date: new Date().toLocaleString()
+            };
+            history.unshift(entry); // Add to start
+            localStorage.setItem('cb_history', JSON.stringify(history));
+        }
+
+        function showHistory() {
+            const history = getHistory();
+            const list = document.getElementById('history-list');
+            list.innerHTML = "";
+
+            if (history.length === 0) {
+                list.innerHTML = `<p style="text-align:center; padding: 2rem; color: var(--text-dim);">No history yet! Generate your first content 👆</p>`;
+            } else {
+                history.forEach((item, index) => {
+                    const div = document.createElement('div');
+                    div.className = "history-item";
+                    div.innerHTML = `
+                        <div class="hist-meta">
+                            <h4>${item.type}</h4>
+                            <p>${item.date}</p>
+                            <div class="hist-preview">"${item.variations[0].substring(0, 55)}..."</div>
+                        </div>
+                        <button class="action-btn" onclick="viewHistoryItem(${index})">View</button>
+                    `;
+                    list.appendChild(div);
+                });
+            }
+            navigateTo('screen-history');
+        }
+
+        function viewHistoryItem(index) {
+            const item = getHistory()[index];
+            lastInputState = { type: item.type, desc: item.desc, tone: item.tone, lang: item.lang };
+            
+            document.getElementById('selected-type-title').innerText = item.type;
+            document.getElementById('prompt-input').value = item.desc;
+            
+            const wrapper = document.getElementById('ai-results-wrapper');
+            wrapper.innerHTML = "";
+            item.variations.forEach(v => wrapper.appendChild(createResultCard(v)));
+            
+            document.getElementById('results-area').style.display = 'block';
+            document.getElementById('copy-all-btn').style.display = 'flex';
+            navigateTo('screen-generator');
+        }
+
+        function clearHistory() {
+            if (confirm("Delete all history permanently?")) {
+                localStorage.removeItem('cb_history');
+                showHistory();
+            }
+        }
+
+        // --- AI LOGIC ---
+        function openGenerator(type, icon) {
+            lastInputState.type = type;
+            document.getElementById('selected-type-title').innerText = `${icon} ${type}`;
+            document.getElementById('prompt-input').value = "";
+            document.getElementById('results-area').style.display = 'none';
+            navigateTo('screen-generator');
+        }
+
+        async function handleGeneration() {
+            const input = document.getElementById('prompt-input');
+            const used = getUsage();
+
+            if (used >= MAX_FREE_USES) return document.getElementById('upgrade-modal').style.display = 'flex';
+            if (!input.value.trim()) return input.classList.add('shake'), setTimeout(()=>input.classList.remove('shake'), 300);
+
+            lastInputState.desc = input.value;
+            lastInputState.tone = document.querySelector('#tone-pills .active').innerText;
+            lastInputState.lang = document.querySelector('#lang-pills .active').innerText;
+
+            const btn = document.getElementById('gen-btn');
+            const loader = document.getElementById('loading-indicator');
+            const wrapper = document.getElementById('ai-results-wrapper');
+            const copyAllBtn = document.getElementById('copy-all-btn');
+            
+            btn.disabled = true;
+            wrapper.innerHTML = "";
+            copyAllBtn.style.display = 'none';
+            document.getElementById('results-area').style.display = 'block';
+            loader.style.display = 'block';
+
+            try {
+                const prompt = constructAIPrompt(bizData(), lastInputState.type, lastInputState.desc, lastInputState.tone, lastInputState.lang, 3);
+                const response = await fetchGroqAI(prompt);
+                const variations = response.split('[[SEP]]').filter(v => v.trim().length > 5).slice(0, 3);
+                
+                variations.forEach(v => wrapper.appendChild(createResultCard(v)));
+                
+                // Save and update
+                saveToHistory(lastInputState.type, lastInputState.desc, variations, lastInputState.tone, lastInputState.lang);
+                localStorage.setItem('cb_uses_count', used + 1);
+                updateUsageUI();
+                
+                copyAllBtn.style.display = 'flex';
+            } catch (err) {
+                alert("Error: " + err.message);
+            } finally {
+                btn.disabled = false;
+                loader.style.display = 'none';
+            }
+        }
+
+        function constructAIPrompt(biz, type, desc, tone, lang, count) {
+            let langRule = "";
+            if (lang === "English") {
+                langRule = "STRICT LANGUAGE RULE: Write ONLY in pure English. No Hindi words. No Hinglish. Not a single non-English word. Pure English only.";
+            } else if (lang === "Hindi") {
+                langRule = "STRICT LANGUAGE RULE: Write ONLY in pure Hindi using Devanagari script (हिंदी). No English words at all. No Roman script. Pure Hindi only. Example: 'आज हमारे रेस्टोरेंट में नया मेनू शुरू हो रहा है'";
+            } else if (lang === "Hinglish") {
+                langRule = "STRICT LANGUAGE RULE: Write in Hinglish — Roman script only, naturally mixing Hindi and English words together. Example: 'Aaj hamare restaurant mein naya menu start ho raha hai, aao zaroor taste karo!'";
+            }
+
+            const rules = `Write like a real Indian business owner. Emojis naturally placed. Max 100 words. ${langRule}`;
+            
+            return `${rules}\n\nTask: Write ${count} variation(s) for ${biz.name} (${biz.type}) about ${desc}. Tone: ${tone}. Language: ${lang}. Separate each variation with [[SEP]].\n\nREMEMBER: Follow the language rule above strictly. This is the most important instruction.`;
+        }
+
+        async function fetchGroqAI(prompt) {
+            const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                method: "POST",
+                headers: { "Authorization": `Bearer ${GROQ_API_KEY}`, "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    model: "llama-3.3-70b-versatile",
+                    messages: [{ role: "user", content: prompt }],
+                    temperature: 0.8
+                })
+            });
+            const data = await response.json();
+            return data.choices[0].message.content;
+        }
+
+        function createResultCard(content) {
+            const div = document.createElement('div');
+            div.className = "output-card";
+            div.innerHTML = `
+                <div class="output-text">${content.trim()}</div>
+                <span class="char-count">📝 ${content.trim().length} characters</span>
+                <div class="card-actions">
+                    <button class="action-btn" onclick="regenerateOne(this)">🔄</button>
+                    <button class="action-btn copy" onclick="copyText(this)">Copy</button>
+                </div>
+            `;
+            return div;
+        }
+
+        function copyText(btn) {
+            const text = btn.closest('.output-card').querySelector('.output-text').innerText;
+            navigator.clipboard.writeText(text);
+            showToast("✅ Copied to clipboard!");
+        }
+
+        function copyAll() {
+            const texts = Array.from(document.querySelectorAll('.output-text')).map(el => el.innerText);
+            navigator.clipboard.writeText(texts.join('\n\n---\n\n'));
+            showToast("✅ All 3 variations copied!");
+        }
+
+        async function regenerateOne(btn) {
+            const card = btn.closest('.output-card');
+            card.innerHTML = `<div class="shimmer" style="height:60px; margin-bottom:0;"></div>`;
+            try {
+                const prompt = constructAIPrompt(bizData(), lastInputState.type, lastInputState.desc, lastInputState.tone, lastInputState.lang, 1);
+                const response = await fetchGroqAI(prompt);
+                const newText = response.replace('[[SEP]]', '').trim();
+                card.replaceWith(createResultCard(newText));
+            } catch (err) { alert("Regen failed"); }
+        }
+
+        function resetApp() { if (confirm("Reset everything?")) { localStorage.clear(); location.reload(); } }
+        function contactPro() { window.open(`https://wa.me/${WHATSAPP_PRO_NUMBER}?text=Hi, I want CaptionBuddy Pro!`, '_blank'); }
+        function closeModal() { document.getElementById('upgrade-modal').style.display = 'none'; }
+    </script>
+</body>
+</html>
