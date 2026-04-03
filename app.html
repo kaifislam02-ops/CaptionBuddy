@@ -23,15 +23,20 @@
             --new-arrival: #007AFF;
             --review: #AF52DE;
             --reset: #FF3B30;
+            --pro-gold: #FFD700;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-color); color: var(--text-main); line-height: 1.6; overflow-x: hidden; }
         h1, h2, h3 { font-family: 'Bebas Neue', sans-serif; letter-spacing: 1px; }
 
+        /* --- UI COMPONENTS --- */
         .btn { background: var(--accent-color); color: black; border: none; padding: 14px 24px; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 1rem; transition: transform 0.2s, opacity 0.2s; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .btn:active { transform: scale(0.98); }
         .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-outline { background: transparent; color: white; border: 1px solid #444; margin-top: 10px; }
+        .btn-pro { background: var(--pro-gold); color: black; }
+
         .input-group { margin-bottom: 20px; }
         label { display: block; margin-bottom: 8px; color: var(--text-dim); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; }
         input, select, textarea { width: 100%; background: var(--surface-light); border: 1px solid #333; color: white; padding: 14px; border-radius: 10px; font-family: inherit; font-size: 1rem; }
@@ -40,6 +45,7 @@
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 50% { transform: translateX(8px); } 75% { transform: translateX(-8px); } }
         .shake { animation: shake 0.3s ease-in-out; border-color: #ff3b30 !important; }
 
+        /* --- LAYOUT --- */
         nav { padding: 1.5rem; border-bottom: 1px solid #222; display: flex; flex-direction: column; align-items: center; background: var(--bg-color); position: sticky; top: 0; z-index: 100; }
         .logo { font-size: 1.8rem; color: white; margin-bottom: 4px; }
         .tagline { font-size: 0.8rem; color: var(--text-dim); font-weight: 500; }
@@ -48,15 +54,20 @@
         .screen.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* --- DASHBOARD --- */
         .dash-header-flex { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; }
-        .history-trigger { background: var(--surface-light); border: 1px solid #333; color: white; padding: 8px 12px; border-radius: 10px; font-size: 0.85rem; cursor: pointer; font-weight: 600; }
+        .header-actions { display: flex; gap: 8px; }
+        .icon-btn { background: var(--surface-light); border: 1px solid #333; color: white; padding: 10px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .pro-badge { background: var(--pro-gold); color: black; font-size: 0.7rem; padding: 2px 8px; border-radius: 4px; font-weight: 900; margin-left: 8px; vertical-align: middle; }
         .usage-text-dash { font-size: 0.85rem; font-weight: 700; margin-top: 4px; }
+
         .grid-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
         .card { background: var(--surface-color); padding: 1.5rem; border-radius: 18px; text-align: center; cursor: pointer; border: 1px solid #333; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; flex-direction: column; align-items: center; gap: 10px; }
         .card:hover { border-color: var(--accent-color); background: #222; transform: translateY(-5px); }
         .card-icon { font-size: 1.5rem; height: 50px; width: 50px; display: flex; align-items: center; justify-content: center; border-radius: 12px; margin-bottom: 4px; }
         .card h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9rem; }
 
+        /* --- GENERATOR --- */
         .gen-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
         .back-btn { background: none; border: none; color: var(--accent-color); font-weight: 600; cursor: pointer; padding: 0; }
         .usage-badge { background: #222; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; border: 1px solid #444; }
@@ -64,6 +75,7 @@
         .pill { padding: 8px 16px; border-radius: 20px; background: var(--surface-light); border: 1px solid #333; font-size: 0.85rem; cursor: pointer; color: var(--text-dim); transition: all 0.2s; }
         .pill.active { background: var(--accent-color); color: black; border-color: var(--accent-color); font-weight: 600; }
 
+        /* --- OUTPUT --- */
         .output-container { margin-top: 2rem; }
         .output-card { background: var(--surface-color); border: 1px solid #333; border-radius: 15px; padding: 1.5rem; margin-bottom: 16px; position: relative; }
         .output-text { font-size: 0.95rem; color: #eee; white-space: pre-wrap; margin-bottom: 1rem; }
@@ -73,21 +85,29 @@
         .action-btn:hover { background: rgba(255, 255, 255, 0.1); color: white; border-color: white; }
         .action-btn.copy { color: var(--accent-color); border-color: var(--accent-color); background: rgba(37, 211, 102, 0.05); }
 
+        /* --- HISTORY --- */
         .history-item { background: var(--surface-color); border: 1px solid #333; padding: 1rem; border-radius: 12px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
         .hist-meta h4 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.95rem; margin-bottom: 2px;}
         .hist-meta p { font-size: 0.75rem; color: var(--text-dim); }
         .hist-preview { font-size: 0.85rem; color: #bbb; margin-top: 6px; font-style: italic; }
 
+        /* --- UI FEEDBACK --- */
         #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: #fff; color: #000; padding: 12px 24px; border-radius: 30px; font-weight: 700; font-size: 0.9rem; z-index: 2000; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
         #toast.show { transform: translateX(-50%) translateY(0); }
-
         #loading-indicator { display: none; text-align: center; margin-bottom: 1rem; }
-        .loading-text { font-weight: 600; color: var(--accent-color); margin-bottom: 8px; display: block; }
         .shimmer { height: 100px; background: linear-gradient(90deg, #1a1a1a 25%, #262626 50%, #1a1a1a 75%); background-size: 200% 100%; animation: loading 1.5s infinite; border-radius: 15px; margin-bottom: 10px; }
         @keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
+        /* --- MODALS & PRO UNLOCK --- */
         .modal-overlay { position: fixed; top:0; left:0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px; }
-        .modal { background: var(--surface-color); border: 2px solid var(--accent-color); padding: 2.5rem; border-radius: 32px; max-width: 400px; text-align: center; }
+        .modal { background: var(--surface-color); border: 2px solid var(--accent-color); padding: 2.5rem; border-radius: 32px; max-width: 400px; text-align: center; position: relative; }
+        .modal-pro { border-color: var(--pro-gold); }
+        #pro-code-input-area { display: none; margin-top: 20px; }
+
+        /* --- CELEBRATION --- */
+        #celebration-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 3000; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; overflow: hidden; }
+        .confetti { position: absolute; width: 10px; height: 10px; background: #ffd700; animation: fall 3s linear infinite; }
+        @keyframes fall { to { transform: translateY(100vh) rotate(360deg); } }
 
         @media (max-width: 400px) { .grid-container { grid-template-columns: 1fr; } }
     </style>
@@ -137,10 +157,15 @@
             <div class="dash-header-flex">
                 <div class="welcome-header">
                     <p style="color: var(--accent-color); font-weight: 600;">Welcome back,</p>
-                    <h2 id="display-biz-name" style="font-size: 2.2rem; line-height: 1;">Business Name</h2>
+                    <h2 style="font-size: 2.2rem; line-height: 1;">
+                        <span id="display-biz-name">Business Name</span><span id="dash-pro-badge" class="pro-badge" style="display:none">⭐ PRO</span>
+                    </h2>
                     <div class="usage-text-dash" id="usage-dash">Free: 9/9 left</div>
                 </div>
-                <button class="history-trigger" onclick="showHistory()">📋 History</button>
+                <div class="header-actions">
+                    <button class="icon-btn" onclick="showHistory()" title="History">📋</button>
+                    <button class="icon-btn" onclick="showSettings()" title="Settings">⚙️</button>
+                </div>
             </div>
 
             <div class="grid-container">
@@ -166,9 +191,24 @@
                 </div>
                 <div class="card" onclick="resetApp()" style="border-style: dashed;">
                     <div class="card-icon" style="background: rgba(255, 59, 48, 0.1); color: var(--reset);">🔄</div>
-                    <h3>Reset Business</h3>
+                    <h3>Reset App</h3>
                 </div>
             </div>
+        </section>
+
+        <!-- SETTINGS SCREEN -->
+        <section id="screen-settings" class="screen">
+            <div class="gen-header">
+                <button class="back-btn" onclick="showDashboard()">← Back</button>
+                <h3 style="font-size: 1.5rem;">Settings</h3>
+            </div>
+            <div class="output-card" style="margin-top: 1rem;">
+                <p><strong>Business:</strong> <span id="settings-biz-name"></span></p>
+                <p><strong>Type:</strong> <span id="settings-biz-type"></span></p>
+                <p><strong>Status:</strong> <span id="settings-pro-status">Free Tier</span></p>
+            </div>
+            <button class="btn btn-outline" onclick="navigateTo('screen-setup')">✏️ Edit Business Info</button>
+            <button class="btn btn-pro" id="settings-unlock-pro-btn" style="margin-top: 10px;" onclick="openUpgradeModal()">🔑 Enter Pro Code</button>
         </section>
 
         <!-- HISTORY SCREEN -->
@@ -225,25 +265,47 @@
         </section>
     </main>
 
-    <div id="toast">✅ Copied to clipboard!</div>
-
+    <!-- UPGRADE MODAL -->
     <div class="modal-overlay" id="upgrade-modal">
-        <div class="modal">
-            <h2 style="font-size: 2.2rem; margin-bottom: 10px;">You're on a roll! 🚀</h2>
-            <p style="color: var(--text-dim); margin-bottom: 25px;">You've used all 9 free generations. Upgrade to Pro for unlimited content for your business.</p>
-            <button class="btn" onclick="contactPro()">💬 WhatsApp Us for Pro</button>
-            <button class="back-btn" style="margin-top: 15px; width: 100%; color: #888;" onclick="closeModal()">Maybe later</button>
+        <div class="modal modal-pro">
+            <h2 style="font-size: 2.2rem; margin-bottom: 10px;">Upgrade to Pro! 🚀</h2>
+            <p style="color: var(--text-dim); margin-bottom: 20px;">Get unlimited content and unlock all premium features for your business.</p>
+            
+            <div id="modal-options">
+                <button class="btn" onclick="contactWhatsApp()">💬 Contact on WhatsApp</button>
+                <button class="btn btn-outline" onclick="showCodeInput()">🔑 I have a Pro Code</button>
+            </div>
+
+            <div id="pro-code-input-area">
+                <input type="text" id="pro-code-entry" placeholder="Enter Code (e.g. CBPRO001)" style="text-align: center; margin-bottom: 10px;">
+                <button class="btn btn-pro" onclick="validateProCode()">Unlock Pro →</button>
+                <button class="back-btn" style="margin-top: 10px;" onclick="hideCodeInput()">← Back</button>
+            </div>
+
+            <button class="back-btn" style="margin-top: 25px; width: 100%; color: #888;" onclick="closeModal()">Maybe later</button>
         </div>
     </div>
+
+    <!-- CELEBRATION -->
+    <div id="celebration-screen">
+        <h1 style="font-size: 4rem; color: var(--pro-gold); margin-bottom: 0;">⭐ WELCOME TO PRO!</h1>
+        <p style="font-size: 1.5rem; font-weight: 700;">Unlimited generations unlocked!</p>
+        <div id="confetti-box"></div>
+    </div>
+
+    <div id="toast">✅ Copied to clipboard!</div>
 
     <script>
         const WHATSAPP_PRO_NUMBER = "918076514639"; 
         const MAX_FREE_USES = 9;
+        const PRO_CODES = ["CBPRO001", "CBPRO002", "CBPRO003", "CBPRO004", "CBPRO005", "CBPRO006", "CBPRO007", "CBPRO008", "CBPRO009", "CBPRO010"];
+
         let lastInputState = { type: "", desc: "", tone: "", lang: "" };
 
         const bizData = () => JSON.parse(localStorage.getItem('captionBuddyBiz'));
         const getUsage = () => parseInt(localStorage.getItem('cb_uses_count')) || 0;
         const getHistory = () => JSON.parse(localStorage.getItem('cb_history')) || [];
+        const isPro = () => localStorage.getItem('cb_pro') === "true";
 
         window.onload = () => {
             updateUsageUI();
@@ -258,27 +320,117 @@
         }
 
         function showDashboard() {
-            document.getElementById('display-biz-name').innerText = bizData().name;
+            const data = bizData();
+            document.getElementById('display-biz-name').innerText = data.name;
+            document.getElementById('dash-pro-badge').style.display = isPro() ? 'inline-block' : 'none';
             updateUsageUI();
             navigateTo('screen-dashboard');
         }
 
         function updateUsageUI() {
-            const used = getUsage();
-            const rem = Math.max(0, MAX_FREE_USES - used);
+            const usageTextGen = document.getElementById('usage-text-gen');
+            const usageDash = document.getElementById('usage-dash');
+
+            if (isPro()) {
+                const proTxt = "⭐ Pro — Unlimited generations";
+                usageTextGen.innerText = proTxt;
+                usageDash.innerText = proTxt;
+                usageTextGen.style.color = "#25D366";
+                usageDash.style.color = "#25D366";
+                usageTextGen.style.borderColor = "#ffd700";
+                return;
+            }
+
+            const rem = Math.max(0, MAX_FREE_USES - getUsage());
             const text = `Free: ${rem}/${MAX_FREE_USES} left`;
-            const genBadge = document.getElementById('usage-text-gen');
-            const dashBadge = document.getElementById('usage-dash');
-            genBadge.innerText = text;
-            dashBadge.innerText = text;
+            usageTextGen.innerText = text;
+            usageDash.innerText = text;
+
             let color = "#25D366";
             if (rem <= 3) color = "#FFD700";
             if (rem === 0) color = "#FF3B30";
-            genBadge.style.borderColor = color;
-            genBadge.style.color = color;
-            dashBadge.style.color = color;
+            usageTextGen.style.color = color;
+            usageDash.style.color = color;
+            usageTextGen.style.borderColor = color;
         }
 
+        // --- PRO LOGIC ---
+        function openUpgradeModal() {
+            document.getElementById('upgrade-modal').style.display = 'flex';
+            hideCodeInput();
+        }
+
+        function showCodeInput() {
+            document.getElementById('modal-options').style.display = 'none';
+            document.getElementById('pro-code-input-area').style.display = 'block';
+        }
+
+        function hideCodeInput() {
+            document.getElementById('modal-options').style.display = 'flex';
+            document.getElementById('pro-code-input-area').style.display = 'none';
+        }
+
+        function contactWhatsApp() {
+            const biz = bizData();
+            const msg = `Hi! I want to upgrade CaptionBuddy to Pro. Business: ${biz.name}`;
+            window.open(`https://wa.me/${WHATSAPP_PRO_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        function validateProCode() {
+            const codeInput = document.getElementById('pro-code-entry');
+            const code = codeInput.value.trim().toUpperCase();
+            const usedCodes = JSON.parse(localStorage.getItem('cb_used_codes')) || [];
+
+            if (PRO_CODES.includes(code)) {
+                if (usedCodes.includes(code)) {
+                    alert("❌ This code has already been used. Contact us for a new code.");
+                } else {
+                    // Success
+                    localStorage.setItem('cb_pro', "true");
+                    usedCodes.push(code);
+                    localStorage.setItem('cb_used_codes', JSON.stringify(usedCodes));
+                    triggerCelebration();
+                }
+            } else {
+                alert("❌ Invalid code. Contact us on WhatsApp to get yours.");
+            }
+        }
+
+        function triggerCelebration() {
+            closeModal();
+            const screen = document.getElementById('celebration-screen');
+            const box = document.getElementById('confetti-box');
+            screen.style.display = 'flex';
+            
+            // Generate simple CSS confetti
+            for (let i = 0; i < 50; i++) {
+                const c = document.createElement('div');
+                c.className = 'confetti';
+                c.style.left = Math.random() * 100 + 'vw';
+                c.style.backgroundColor = ['#ffd700', '#25D366', '#ffffff'][Math.floor(Math.random() * 3)];
+                c.style.animationDuration = (Math.random() * 2 + 1) + 's';
+                c.style.animationDelay = Math.random() * 2 + 's';
+                box.appendChild(c);
+            }
+
+            setTimeout(() => {
+                screen.style.display = 'none';
+                box.innerHTML = '';
+                showDashboard();
+            }, 2500);
+        }
+
+        // --- SETTINGS ---
+        function showSettings() {
+            const data = bizData();
+            document.getElementById('settings-biz-name').innerText = data.name;
+            document.getElementById('settings-biz-type').innerText = data.type;
+            document.getElementById('settings-pro-status').innerText = isPro() ? "⭐ Pro Active" : "Free Tier";
+            document.getElementById('settings-unlock-pro-btn').style.display = isPro() ? "none" : "block";
+            navigateTo('screen-settings');
+        }
+
+        // --- CORE LOGIC ---
         function selectPill(el, group) {
             el.parentElement.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
             el.classList.add('active');
@@ -350,27 +502,31 @@
         async function handleGeneration() {
             const input = document.getElementById('prompt-input');
             const used = getUsage();
-            if (used >= MAX_FREE_USES) return document.getElementById('upgrade-modal').style.display = 'flex';
+            if (!isPro() && used >= MAX_FREE_USES) return openUpgradeModal();
             if (!input.value.trim()) return input.classList.add('shake'), setTimeout(()=>input.classList.remove('shake'), 300);
+            
             lastInputState.desc = input.value;
             lastInputState.tone = document.querySelector('#tone-pills .active').innerText;
             lastInputState.lang = document.querySelector('#lang-pills .active').innerText;
+            
             const btn = document.getElementById('gen-btn');
             const loader = document.getElementById('loading-indicator');
             const wrapper = document.getElementById('ai-results-wrapper');
             const copyAllBtn = document.getElementById('copy-all-btn');
+            
             btn.disabled = true;
             wrapper.innerHTML = "";
             copyAllBtn.style.display = 'none';
             document.getElementById('results-area').style.display = 'block';
             loader.style.display = 'block';
+
             try {
                 const prompt = constructAIPrompt(bizData(), lastInputState.type, lastInputState.desc, lastInputState.tone, lastInputState.lang, 3);
                 const text = await fetchGroqAI(prompt);
                 const variations = text.split('[[SEP]]').filter(v => v.trim().length > 5).slice(0, 3);
                 variations.forEach(v => wrapper.appendChild(createResultCard(v)));
                 saveToHistory(lastInputState.type, lastInputState.desc, variations, lastInputState.tone, lastInputState.lang);
-                localStorage.setItem('cb_uses_count', used + 1);
+                if (!isPro()) localStorage.setItem('cb_uses_count', used + 1);
                 updateUsageUI();
                 copyAllBtn.style.display = 'flex';
             } catch (err) { alert("Error: " + err.message); } finally { btn.disabled = false; loader.style.display = 'none'; }
@@ -379,10 +535,10 @@
         function constructAIPrompt(biz, type, desc, tone, lang, count) {
             let langRule = "";
             if (lang === "English") langRule = "STRICT LANGUAGE RULE: Write ONLY in pure English. No Hindi words. No Hinglish. Not a single non-English word. Pure English only.";
-            else if (lang === "Hindi") langRule = "STRICT LANGUAGE RULE: Write ONLY in pure Hindi using Devanagari script (हिंदी). No English words at all. No Roman script. Pure Hindi only. Example: 'आज हमारे रेस्टोरेंट में नया मेनू शुरू हो रहा है'";
-            else if (lang === "Hinglish") langRule = "STRICT LANGUAGE RULE: Write in Hinglish — Roman script only, naturally mixing Hindi and English words together. Example: 'Aaj hamare restaurant mein naya menu start ho raha hai, aao zaroor taste karo!'";
+            else if (lang === "Hindi") langRule = "STRICT LANGUAGE RULE: Write ONLY in pure Hindi using Devanagari script (हिंदी). No English words at all. No Roman script. Pure Hindi only.";
+            else if (lang === "Hinglish") langRule = "STRICT LANGUAGE RULE: Write in Hinglish — Roman script only, naturally mixing Hindi and English words together.";
             const rules = `Write like a real Indian business owner. Emojis naturally placed. Max 100 words. ${langRule}`;
-            return `${rules}\n\nTask: Write ${count} variation(s) for ${biz.name} (${biz.type}) about ${desc}. Tone: ${tone}. Language: ${lang}. Separate each variation with [[SEP]].\n\nREMEMBER: Follow the language rule above strictly. This is the most important instruction.`;
+            return `${rules}\n\nTask: Write ${count} variation(s) for ${biz.name} (${biz.type}) about ${desc}. Tone: ${tone}. Language: ${lang}. Separate each variation with [[SEP]].\n\nREMEMBER: Follow the language rule above strictly.`;
         }
 
         async function fetchGroqAI(prompt) {
@@ -427,7 +583,6 @@
         }
 
         function resetApp() { if (confirm("Reset everything?")) { localStorage.clear(); location.reload(); } }
-        function contactPro() { window.open(`https://wa.me/${WHATSAPP_PRO_NUMBER}?text=Hi, I want CaptionBuddy Pro!`, '_blank'); }
         function closeModal() { document.getElementById('upgrade-modal').style.display = 'none'; }
     </script>
 </body>
