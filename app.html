@@ -443,7 +443,13 @@
 
     <script>
         // --- CONFIGURATION ---
-        const GROQ_API_KEY = "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"; 
+       const res = await fetch('/api/generate', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    prompt: yourPrompt
+  })
+}); 
         const WHATSAPP_PRO_NUMBER = "918076514639"; 
         const MAX_FREE_USES = 9;
 
