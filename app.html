@@ -615,7 +615,7 @@
             <div class="pill-row" id="lang-pills">
                 <div class="pill selected" onclick="selectPill(this, 'lang')">English</div>
                 <div class="pill" onclick="selectPill(this, 'lang')">Hindi</div>
-                <div class="pill" onclick="selectPill(this, 'lang')">Hinglish</div>
+                <div class="pill active" onclick="selectPill(this, 'lang')">Hinglish</div>
             </div>
 
             <button class="btn btn-primary shimmer" style="width: 100%;" onclick="startGeneration()">✨ Generate Content</button>
@@ -711,7 +711,7 @@
     <script>
         // --- CONSTANTS ---
         const PRO_CODES = ["CBPRO001", "CBPRO002", "CBPRO100"];
-        const WHATSAPP_NUMBER = "919999999999"; // Replace with your number
+        const WHATSAPP_NUMBER = "919999999999"; 
         const MAX_FREE = 9;
 
         // --- STATE ---
@@ -719,37 +719,32 @@
         let currentScreen = "setup";
         let isPro = localStorage.getItem('cb_pro') === 'true';
 
-        // --- INIT ---
-        window.onload = () => {
-            const biz = JSON.parse(localStorage.getItem('cb_biz'));
-            if (biz) {
-                showScreen('dashboard');
-                applyBizData(biz);
-            } else {
-                showScreen('setup');
-                document.getElementById('bottom-nav').style.display = 'none';
-            }
-            updateUsageUI();
-            setDynamicGreeting();
-        };
+        // --- FUNCTIONS ---
 
-        // --- NAVIGATION ---
         function showScreen(screenId) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(`screen-${screenId}`).classList.add('active');
+            const target = document.getElementById(`screen-${screenId}`);
+            if (target) target.classList.add('active');
             
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             const index = ['dashboard', 'generator', 'history', 'settings'].indexOf(screenId);
-            if (index > -1) document.querySelectorAll('.nav-item')[index].classList.add('active');
+            if (index > -1) {
+                const navItems = document.querySelectorAll('.nav-item');
+                if (navItems[index]) navItems[index].classList.add('active');
+            }
             
             if (screenId === 'history') renderHistory();
-            if (screenId === 'setup') document.getElementById('bottom-nav').style.display = 'none';
-            else document.getElementById('bottom-nav').style.display = 'flex';
+            
+            const bottomNav = document.getElementById('bottom-nav');
+            if (screenId === 'setup') {
+                if (bottomNav) bottomNav.style.display = 'none';
+            } else {
+                if (bottomNav) bottomNav.style.display = 'flex';
+            }
             
             window.scrollTo(0,0);
         }
 
-        // --- SETUP LOGIC ---
         function selectType(el, type) {
             document.querySelectorAll('.type-item').forEach(i => i.classList.remove('selected'));
             el.classList.add('selected');
@@ -763,7 +758,9 @@
 
         function finalizeSetup() {
             const name = document.getElementById('setup-name').value;
-            const lang = document.querySelector('.setup-lang-pill.selected').innerText;
+            const langEl = document.querySelector('.setup-lang-pill.selected');
+            const lang = langEl ? langEl.innerText : "English";
+            
             if (!name || !currentBusinessType) {
                 showToast("Please fill all details", true);
                 return;
@@ -775,31 +772,41 @@
         }
 
         function applyBizData(biz) {
-            document.getElementById('biz-name-display').innerText = biz.name;
-            document.getElementById('settings-name').value = biz.name;
+            const nameDisp = document.getElementById('biz-name-display');
+            const setInput = document.getElementById('settings-name');
+            if (nameDisp) nameDisp.innerText = biz.name;
+            if (setInput) setInput.value = biz.name;
+            
             if (isPro) {
-                document.getElementById('pro-badge').style.display = 'block';
-                document.getElementById('settings-plan-tag').innerText = "⭐ Pro Member";
-                document.getElementById('settings-upgrade-btn').style.display = 'none';
+                const proBadge = document.getElementById('pro-badge');
+                const planTag = document.getElementById('settings-plan-tag');
+                const upBtn = document.getElementById('settings-upgrade-btn');
+                if (proBadge) proBadge.style.display = 'block';
+                if (planTag) planTag.innerText = "⭐ Pro Member";
+                if (upBtn) upBtn.style.display = 'none';
             }
         }
 
-        // --- GENERATOR LOGIC ---
         function openGen(type, emoji) {
-            document.getElementById('gen-title').innerText = `${emoji} ${type}`;
-            document.getElementById('gen-prompt').value = "";
-            document.getElementById('photo-preview-box').style.display = 'none';
+            const title = document.getElementById('gen-title');
+            const prompt = document.getElementById('gen-prompt');
+            if (title) title.innerText = `${emoji} ${type}`;
+            if (prompt) prompt.value = "";
+            
+            const photoBox = document.getElementById('photo-preview-box');
+            if (photoBox) photoBox.style.display = 'none';
+            
             switchGenTab('describe');
             
-            const biz = JSON.parse(localStorage.getItem('cb_biz'));
-            const prompts = {
+            const biz = JSON.parse(localStorage.getItem('cb_biz')) || { name: "Business" };
+            const placeholders = {
                 'WhatsApp Broadcast': `e.g. Sunday special thali for ₹199 at ${biz.name}`,
                 'Instagram Caption': `e.g. New items added to the menu at ${biz.name}`,
                 'Festival Offer': `e.g. Diwali 20% discount on all services`,
                 'New Arrival': `e.g. Our new winter collection is now live`,
                 'Review Reply': `e.g. Thank a customer named Rahul for a 5-star review`
             };
-            document.getElementById('gen-prompt').placeholder = prompts[type] || "Describe your post...";
+            if (prompt) prompt.placeholder = placeholders[type] || "Describe your post...";
             showScreen('generator');
         }
 
@@ -808,12 +815,16 @@
             document.querySelectorAll('.gen-tab-content').forEach(c => c.style.display = 'none');
             
             if (tab === 'describe') {
-                document.getElementById('tab-desc-trigger').classList.add('active');
-                document.getElementById('tab-describe').style.display = 'block';
+                const trigger = document.getElementById('tab-desc-trigger');
+                const content = document.getElementById('tab-describe');
+                if (trigger) trigger.classList.add('active');
+                if (content) content.style.display = 'block';
             } else {
                 if (!isPro) { toggleModal(true); return; }
-                document.getElementById('tab-photo-trigger').classList.add('active');
-                document.getElementById('tab-photo').style.display = 'block';
+                const trigger = document.getElementById('tab-photo-trigger');
+                const content = document.getElementById('tab-photo');
+                if (trigger) trigger.classList.add('active');
+                if (content) content.style.display = 'block';
             }
         }
 
@@ -822,20 +833,24 @@
             el.classList.add('selected');
         }
 
-        // --- PHOTO ANALYZE ---
         async function processPhoto(input) {
             if (!input.files || !input.files[0]) return;
             
             const file = input.files[0];
             const reader = new FileReader();
             
-            document.getElementById('writing-overlay').style.display = 'flex';
-            document.querySelector('#writing-overlay h2').innerText = "Analyzing Photo...";
+            const overlay = document.getElementById('writing-overlay');
+            const overlayH2 = document.querySelector('#writing-overlay h2');
+            
+            if (overlay) overlay.style.display = 'flex';
+            if (overlayH2) overlayH2.innerText = "Analyzing Photo...";
 
             reader.onload = async (e) => {
                 const base64 = e.target.result;
-                document.getElementById('photo-preview-img').src = base64;
-                document.getElementById('photo-preview-box').style.display = 'block';
+                const prevImg = document.getElementById('photo-preview-img');
+                const prevBox = document.getElementById('photo-preview-box');
+                if (prevImg) prevImg.src = base64;
+                if (prevBox) prevBox.style.display = 'block';
 
                 try {
                     const biz = JSON.parse(localStorage.getItem('cb_biz'));
@@ -845,25 +860,25 @@
                         body: JSON.stringify({
                             type: "analyze_image",
                             image: base64,
-                            businessType: biz.type,
+                            businessType: biz ? biz.type : "Business",
                             model: "meta-llama/llama-4-scout-17b-16e-instruct"
                         })
                     });
                     const data = await res.json();
-                    document.getElementById('gen-prompt').value = data.result;
+                    const promptInput = document.getElementById('gen-prompt');
+                    if (promptInput) promptInput.value = data.result;
                     switchGenTab('describe');
                     showToast("Photo analyzed! ✨");
                 } catch (err) {
                     showToast("Analysis failed", true);
                 } finally {
-                    document.getElementById('writing-overlay').style.display = 'none';
-                    document.querySelector('#writing-overlay h2').innerText = "Writing your content...";
+                    if (overlay) overlay.style.display = 'none';
+                    if (overlayH2) overlayH2.innerText = "Writing your content...";
                 }
             };
             reader.readAsDataURL(file);
         }
 
-        // --- CORE GENERATION ---
         async function startGeneration() {
             const used = parseInt(localStorage.getItem('cb_usage') || 0);
             if (!isPro && used >= MAX_FREE) {
@@ -871,21 +886,26 @@
                 return;
             }
 
-            const prompt = document.getElementById('gen-prompt').value;
-            if (!prompt) {
+            const promptInput = document.getElementById('gen-prompt');
+            const promptValue = promptInput ? promptInput.value : "";
+            if (!promptValue) {
                 showToast("Please describe the post", true);
                 return;
             }
 
-            const type = document.getElementById('gen-title').innerText;
-            const tone = document.querySelector('#tone-pills .selected').innerText;
-            const lang = document.querySelector('#lang-pills .selected').innerText;
+            const typeEl = document.getElementById('gen-title');
+            const type = typeEl ? typeEl.innerText : "Post";
+            const toneEl = document.querySelector('#tone-pills .selected');
+            const tone = toneEl ? toneEl.innerText : "Friendly";
+            const langEl = document.querySelector('#lang-pills .selected');
+            const lang = langEl ? langEl.innerText : "English";
             const biz = JSON.parse(localStorage.getItem('cb_biz'));
 
-            document.getElementById('writing-overlay').style.display = 'flex';
+            const overlay = document.getElementById('writing-overlay');
+            if (overlay) overlay.style.display = 'flex';
 
             const fullPrompt = `Write 3 marketing variations for ${biz.name} (${biz.type}). 
-            Topic: ${prompt}. Tone: ${tone}. Language: ${lang}. Type: ${type}. 
+            Topic: ${promptValue}. Tone: ${tone}. Language: ${lang}. Type: ${type}. 
             Format: Separate each with [[SEP]]`;
 
             try {
@@ -906,12 +926,13 @@
             } catch (err) {
                 showToast("Generation failed", true);
             } finally {
-                document.getElementById('writing-overlay').style.display = 'none';
+                if (overlay) overlay.style.display = 'none';
             }
         }
 
         function renderResults(arr) {
             const container = document.getElementById('results-list');
+            if (!container) return;
             container.innerHTML = "";
             arr.forEach((text, i) => {
                 const card = document.createElement('div');
@@ -933,7 +954,6 @@
             });
         }
 
-        // --- SHARING ---
         function shareWA(txt) {
             showToast("✅ Opening WhatsApp...");
             setTimeout(() => {
@@ -950,12 +970,13 @@
         }
 
         function copyResult(btn) {
-            const txt = btn.closest('.result-card').querySelector('.result-text').innerText;
+            const card = btn.closest('.result-card');
+            const textEl = card.querySelector('.result-text');
+            const txt = textEl ? textEl.innerText : "";
             navigator.clipboard.writeText(txt);
             showToast("✅ Copied!");
         }
 
-        // --- HISTORY ---
         function saveHistory(type, preview, full, tone, lang) {
             const hist = JSON.parse(localStorage.getItem('cb_history') || '[]');
             hist.unshift({ type, preview, full, tone, lang, time: Date.now() });
@@ -967,6 +988,7 @@
             const container = document.getElementById('history-items');
             const empty = document.getElementById('history-empty');
             
+            if (!container || !empty) return;
             container.innerHTML = "";
             if (hist.length === 0) {
                 empty.style.display = 'block';
@@ -993,34 +1015,36 @@
             });
         }
 
-        // --- UI HELPERS ---
         function showToast(msg, isError = false, duration = 2000) {
             const t = document.getElementById('toast');
+            if (!t) return;
             t.innerText = msg;
-            t.style.background = isError ? var(--red) : "white";
+            t.style.background = isError ? "#ff4757" : "white";
             t.classList.add('show');
             setTimeout(() => t.classList.remove('show'), duration);
         }
 
         function toggleModal(show) {
-            document.getElementById('upgrade-modal').style.display = show ? 'flex' : 'none';
+            const modal = document.getElementById('upgrade-modal');
+            if (modal) modal.style.display = show ? 'flex' : 'none';
         }
 
         function validateProCode() {
-            const code = document.getElementById('pro-code-input').value.toUpperCase();
+            const input = document.getElementById('pro-code-input');
+            const code = input ? input.value.toUpperCase() : "";
             if (PRO_CODES.includes(code)) {
                 isPro = true;
                 localStorage.setItem('cb_pro', 'true');
                 toggleModal(false);
                 showToast("🎉 WELCOME TO PRO!");
-                location.reload();
+                setTimeout(() => location.reload(), 1500);
             } else {
                 showToast("Invalid Code", true);
             }
         }
 
         function buyPro() {
-            const biz = JSON.parse(localStorage.getItem('cb_biz'));
+            const biz = JSON.parse(localStorage.getItem('cb_biz')) || { name: "My Business" };
             window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=Hi! I want to upgrade CaptionBuddy to Pro. Business: ${biz.name}`);
         }
 
@@ -1030,6 +1054,8 @@
             const banner = document.getElementById('usage-banner');
             const txt = document.getElementById('usage-count-text');
             const pill = document.getElementById('gen-usage-pill');
+
+            if (!banner || !txt || !pill) return;
 
             if (isPro) {
                 banner.className = "usage-banner usage-green";
@@ -1052,7 +1078,8 @@
             if (hour >= 12 && hour < 17) text = "Good Afternoon! 🌤️";
             else if (hour >= 17 && hour < 21) text = "Good Evening! 🌆";
             else if (hour >= 21 || hour < 5) text = "Good Night! 🌙";
-            document.getElementById('greet-text').innerText = text;
+            const greet = document.getElementById('greet-text');
+            if (greet) greet.innerText = text;
         }
 
         function formatRelativeTime(timestamp) {
@@ -1071,6 +1098,22 @@
                 location.reload();
             }
         }
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const biz = JSON.parse(localStorage.getItem('cb_biz'));
+            if (biz) {
+                showScreen('dashboard');
+                applyBizData(biz);
+            } else {
+                showScreen('setup');
+                const bnav = document.getElementById('bottom-nav');
+                if (bnav) bnav.style.display = 'none';
+            }
+            updateUsageUI();
+            setDynamicGreeting();
+        });
+
     </script>
 </body>
 </html>
