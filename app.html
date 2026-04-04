@@ -2,588 +2,1075 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CaptionBuddy | AI Content for Local Business</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CaptionBuddy | Premium AI Content for Business</title>
+    
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --bg-color: #0d0d0d;
-            --surface-color: #1a1a1a;
-            --surface-light: #262626;
-            --accent-color: #25D366;
-            --text-main: #ffffff;
-            --text-dim: #a0a0a0;
-            --transition-speed: 0.3s;
-            --whatsapp: #25D366;
-            --instagram: #E4405F;
-            --festival: #FFD700;
-            --new-arrival: #007AFF;
-            --review: #AF52DE;
-            --reset: #FF3B30;
-            --pro-gold: #FFD700;
+            --bg-primary: #080808;
+            --bg-secondary: #111111;
+            --bg-card: #161616;
+            --bg-elevated: #1c1c1c;
+            --accent: #25D366;
+            --accent-glow: rgba(37,211,102,0.15);
+            --accent-dim: rgba(37,211,102,0.06);
+            --text-primary: #f5f5f5;
+            --text-secondary: #888888;
+            --text-muted: #444444;
+            --border: rgba(255,255,255,0.06);
+            --border-accent: rgba(37,211,102,0.3);
+            --red: #ff4757;
+            --yellow: #ffa502;
+            --blue: #3742fa;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-heavy: rgba(255, 255, 255, 0.06);
+            --nav-height: 70px;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-color); color: var(--text-main); line-height: 1.6; overflow-x: hidden; }
-        h1, h2, h3 { font-family: 'Bebas Neue', sans-serif; letter-spacing: 1px; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
 
-        /* --- UI COMPONENTS --- */
-        .btn { background: var(--accent-color); color: black; border: none; padding: 14px 24px; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 1rem; transition: transform 0.2s, opacity 0.2s; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn:active { transform: scale(0.98); }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        .btn-outline { background: transparent; color: white; border: 1px solid #444; margin-top: 10px; }
-        .btn-pro { background: var(--pro-gold); color: black; }
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+        }
 
-        .input-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; color: var(--text-dim); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; }
-        input, select, textarea { width: 100%; background: var(--surface-light); border: 1px solid #333; color: white; padding: 14px; border-radius: 10px; font-family: inherit; font-size: 1rem; }
-        input:focus, textarea:focus { outline: none; border-color: var(--accent-color); }
+        h1, h2, h3, .display-font {
+            font-family: 'Bebas Neue', sans-serif;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
 
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 50% { transform: translateX(8px); } 75% { transform: translateX(-8px); } }
-        .shake { animation: shake 0.3s ease-in-out; border-color: #ff3b30 !important; }
+        /* --- UTILITIES --- */
+        .glass {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+        }
 
-        /* --- LAYOUT --- */
-        nav { padding: 1.5rem; border-bottom: 1px solid #222; display: flex; flex-direction: column; align-items: center; background: var(--bg-color); position: sticky; top: 0; z-index: 100; }
-        .logo { font-size: 1.8rem; color: white; margin-bottom: 4px; }
-        .tagline { font-size: 0.8rem; color: var(--text-dim); font-weight: 500; }
-        .container { max-width: 600px; margin: 0 auto; padding: 2rem 1.5rem; }
-        .screen { display: none; animation: fadeIn 0.4s ease-out; }
+        .shimmer {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .shimmer::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to right,
+                transparent,
+                rgba(255, 255, 255, 0.05),
+                transparent
+            );
+            transform: rotate(30deg);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-150%) rotate(30deg); }
+            100% { transform: translateX(150%) rotate(30deg); }
+        }
+
+        /* --- NAVIGATION --- */
+        nav.top-nav {
+            padding: 1.2rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(8, 8, 8, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: var(--nav-height);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding-bottom: env(safe-area-inset-bottom);
+            z-index: 1000;
+            background: rgba(17, 17, 17, 0.95);
+            border-top: 1px solid var(--border);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.65rem;
+            font-weight: 600;
+        }
+
+        .nav-item.active {
+            color: var(--accent);
+        }
+
+        .nav-item i { font-size: 1.4rem; }
+
+        /* --- BUTTONS --- */
+        .btn {
+            padding: 1rem 1.5rem;
+            border-radius: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #000;
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        .btn-primary:active { transform: translateY(1px) scale(0.98); }
+
+        .btn-ghost {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+        }
+
+        /* --- SCREENS --- */
+        .screen {
+            display: none;
+            animation: slideUp 0.4s ease-out forwards;
+            padding: 1.5rem;
+            padding-bottom: 100px;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
         .screen.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- SETUP SCREEN --- */
+        #screen-setup {
+            text-align: center;
+            padding-top: 10vh;
+        }
+
+        .logo-box h1 { font-size: 3.5rem; color: var(--accent); margin-bottom: 0.2rem; }
+        .logo-box p { color: var(--text-secondary); margin-bottom: 2rem; font-weight: 500; }
+
+        .setup-card {
+            padding: 2rem;
+            border-radius: 24px;
+            text-align: left;
+        }
+
+        .input-wrap { margin-bottom: 2rem; position: relative; }
+        .input-wrap input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid var(--border);
+            padding: 12px 0;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .input-wrap input:focus { border-color: var(--accent); box-shadow: 0 4px 10px -5px var(--accent-glow); }
+
+        .type-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 1.5rem 0;
+        }
+
+        .type-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 5px;
+            border-radius: 12px;
+            cursor: pointer;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            transition: 0.2s;
+        }
+
+        .type-item span:first-child { font-size: 1.5rem; margin-bottom: 5px; }
+        .type-item span:last-child { font-size: 0.6rem; font-weight: 700; color: var(--text-secondary); }
+
+        .type-item.selected {
+            background: var(--accent-dim);
+            border-color: var(--accent);
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .type-item.selected span:last-child { color: var(--accent); }
 
         /* --- DASHBOARD --- */
-        .dash-header-flex { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; }
-        .header-actions { display: flex; gap: 8px; }
-        .icon-btn { background: var(--surface-light); border: 1px solid #333; color: white; padding: 10px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .pro-badge { background: var(--pro-gold); color: black; font-size: 0.7rem; padding: 2px 8px; border-radius: 4px; font-weight: 900; margin-left: 8px; vertical-align: middle; }
-        .usage-text-dash { font-size: 0.85rem; font-weight: 700; margin-top: 4px; }
+        .greeting-section { margin: 1.5rem 0; }
+        .greeting-section h2 { font-size: 2.5rem; line-height: 1; }
+        .greeting-section p { color: var(--text-secondary); font-weight: 500; margin-top: 5px; }
 
-        .grid-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-        .card { background: var(--surface-color); padding: 1.5rem; border-radius: 18px; text-align: center; cursor: pointer; border: 1px solid #333; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; flex-direction: column; align-items: center; gap: 10px; }
-        .card:hover { border-color: var(--accent-color); background: #222; transform: translateY(-5px); }
-        .card-icon { font-size: 1.5rem; height: 50px; width: 50px; display: flex; align-items: center; justify-content: center; border-radius: 12px; margin-bottom: 4px; }
-        .card h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9rem; }
+        .usage-banner {
+            padding: 10px 18px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .usage-green { background: var(--accent-dim); color: var(--accent); border: 1px solid var(--border-accent); }
+        .usage-yellow { background: rgba(255, 165, 2, 0.1); color: var(--yellow); border: 1px solid rgba(255,165,2,0.2); }
+        .usage-red { background: rgba(255, 71, 87, 0.1); color: var(--red); border: 1px solid rgba(255,71,87,0.2); }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .content-card {
+            padding: 1.5rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.2s;
+            position: relative;
+        }
+
+        .content-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent);
+            box-shadow: 0 5px 20px var(--accent-glow);
+        }
+
+        .content-card .emoji { font-size: 2rem; margin-bottom: 1rem; display: block; }
+        .content-card h4 { font-size: 1rem; margin-bottom: 4px; }
+        .content-card p { font-size: 0.7rem; color: var(--text-secondary); line-height: 1.2; }
+        .content-card .arrow { position: absolute; bottom: 15px; right: 15px; color: var(--text-muted); }
 
         /* --- GENERATOR --- */
-        .gen-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-        .back-btn { background: none; border: none; color: var(--accent-color); font-weight: 600; cursor: pointer; padding: 0; }
-        .usage-badge { background: #222; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; border: 1px solid #444; }
-        .pill-container { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
-        .pill { padding: 8px 16px; border-radius: 20px; background: var(--surface-light); border: 1px solid #333; font-size: 0.85rem; cursor: pointer; color: var(--text-dim); transition: all 0.2s; }
-        .pill.active { background: var(--accent-color); color: black; border-color: var(--accent-color); font-weight: 600; }
+        .tab-switcher {
+            display: flex;
+            background: var(--bg-secondary);
+            padding: 5px;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+        }
 
-        /* --- OUTPUT --- */
-        .output-container { margin-top: 2rem; }
-        .output-card { background: var(--surface-color); border: 1px solid #333; border-radius: 15px; padding: 1.5rem; margin-bottom: 16px; position: relative; }
-        .output-text { font-size: 0.95rem; color: #eee; white-space: pre-wrap; margin-bottom: 1rem; }
-        .char-count { font-size: 0.7rem; color: var(--text-dim); margin-bottom: 12px; display: block; }
-        .card-actions { display: flex; justify-content: flex-end; gap: 8px; }
-        .action-btn { background: rgba(255, 255, 255, 0.05); color: var(--text-dim); border: 1px solid #444; padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-        .action-btn:hover { background: rgba(255, 255, 255, 0.1); color: white; border-color: white; }
-        .action-btn.copy { color: var(--accent-color); border-color: var(--accent-color); background: rgba(37, 211, 102, 0.05); }
+        .tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+            color: var(--text-muted);
+        }
+
+        .tab.active {
+            background: var(--bg-elevated);
+            color: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 20px;
+            padding: 3rem 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .upload-area:hover { border-color: var(--accent); background: var(--accent-dim); }
+        .upload-area i { font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem; display: block;}
+
+        .pill-row {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 5px 0;
+            margin-bottom: 1.5rem;
+            scrollbar-width: none;
+        }
+
+        .pill-row::-webkit-scrollbar { display: none; }
+
+        .pill {
+            white-space: nowrap;
+            padding: 8px 18px;
+            border-radius: 50px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .pill.selected {
+            background: var(--accent);
+            color: black;
+            border-color: var(--accent);
+        }
+
+        /* --- RESULTS --- */
+        .result-card {
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .result-badge {
+            position: absolute; top: -10px; left: 15px;
+            background: var(--bg-elevated);
+            width: 24px; height: 24px; border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 0.75rem; border: 1px solid var(--border);
+        }
+
+        .result-text { font-size: 0.95rem; line-height: 1.6; color: #eee; margin-bottom: 1.5rem; min-height: 50px;}
+
+        .result-meta {
+            display: flex; gap: 15px; font-size: 0.7rem; color: var(--text-muted);
+            margin-bottom: 1rem; font-weight: 600;
+        }
+
+        .result-actions {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr 0.8fr;
+            gap: 8px;
+        }
+
+        .act-btn {
+            padding: 10px 5px; border-radius: 10px; border: none; font-weight: 700;
+            font-size: 0.75rem; cursor: pointer; display: flex; align-items: center;
+            justify-content: center; gap: 4px; transition: 0.2s;
+        }
+
+        .act-wa { background: #25D366; color: black; }
+        .act-ig { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: white; }
+        .act-copy { background: var(--bg-elevated); color: white; border: 1px solid var(--border); }
+
+        /* --- TOAST --- */
+        #toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: white;
+            color: black;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            z-index: 2000;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            white-space: nowrap;
+        }
+
+        #toast.show { transform: translateX(-50%) translateY(0); }
+
+        /* --- MODAL --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(10px);
+            z-index: 10000; display: none; align-items: center; justify-content: center;
+        }
+
+        .modal-card {
+            width: 90%; max-width: 400px; padding: 2.5rem 2rem; border-radius: 32px;
+            text-align: center; border: 1px solid var(--border-accent);
+        }
+
+        .price-tag { font-size: 3rem; margin: 1rem 0; font-weight: 800; color: var(--accent); }
+
+        /* --- LOADING SCREEN --- */
+        .writing-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(8, 8, 8, 0.95); z-index: 5000;
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+        }
+
+        .pencil-anim { font-size: 4rem; animation: float 1s infinite alternate; }
+        @keyframes float { from { transform: translateY(0); } to { transform: translateY(-20px); } }
 
         /* --- HISTORY --- */
-        .history-item { background: var(--surface-color); border: 1px solid #333; padding: 1rem; border-radius: 12px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-        .hist-meta h4 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.95rem; margin-bottom: 2px;}
-        .hist-meta p { font-size: 0.75rem; color: var(--text-dim); }
-        .hist-preview { font-size: 0.85rem; color: #bbb; margin-top: 6px; font-style: italic; }
+        .history-item {
+            padding: 1.2rem; border-radius: 18px; margin-bottom: 12px;
+            display: flex; gap: 15px; align-items: center;
+        }
+        .hist-icon { font-size: 1.5rem; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: var(--bg-elevated); }
+        .hist-info { flex: 1; overflow: hidden; }
+        .hist-info h5 { font-size: 0.9rem; margin-bottom: 2px; }
+        .hist-info p { font-size: 0.75rem; color: var(--text-secondary); white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
 
-        /* --- UI FEEDBACK --- */
-        #toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: #fff; color: #000; padding: 12px 24px; border-radius: 30px; font-weight: 700; font-size: 0.9rem; z-index: 2000; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
-        #toast.show { transform: translateX(-50%) translateY(0); }
-        #loading-indicator { display: none; text-align: center; margin-bottom: 1rem; }
-        .shimmer { height: 100px; background: linear-gradient(90deg, #1a1a1a 25%, #262626 50%, #1a1a1a 75%); background-size: 200% 100%; animation: loading 1.5s infinite; border-radius: 15px; margin-bottom: 10px; }
-        @keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-
-        /* --- MODALS & PRO UNLOCK --- */
-        .modal-overlay { position: fixed; top:0; left:0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px; }
-        .modal { background: var(--surface-color); border: 2px solid var(--accent-color); padding: 2.5rem; border-radius: 32px; max-width: 400px; text-align: center; position: relative; }
-        .modal-pro { border-color: var(--pro-gold); }
-        #pro-code-input-area { display: none; margin-top: 20px; }
-
-        /* --- CELEBRATION --- */
-        #celebration-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 3000; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; overflow: hidden; }
-        .confetti { position: absolute; width: 10px; height: 10px; background: #ffd700; animation: fall 3s linear infinite; }
-        @keyframes fall { to { transform: translateY(100vh) rotate(360deg); } }
-
-        @media (max-width: 400px) { .grid-container { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
-    <nav>
-        <div class="logo">✍️ CaptionBuddy</div>
-        <div class="tagline">Content for your business in seconds</div>
+    <!-- TOP NAV -->
+    <nav class="top-nav">
+        <div class="logo-font" style="font-size: 1.4rem; font-family: 'Bebas Neue'; letter-spacing: 2px;">
+            ✍️ <span style="color: var(--accent);">CB</span>
+        </div>
+        <div id="biz-name-display" class="display-font" style="font-size: 1.2rem;">CaptionBuddy</div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <div id="pro-badge" class="glass" style="padding: 4px 10px; border-radius: 8px; color: var(--yellow); font-weight: 800; font-size: 0.6rem; display: none; border-color: var(--yellow);">⭐ PRO</div>
+            <i class="icon-settings" onclick="showScreen('settings')" style="cursor: pointer;">⚙️</i>
+        </div>
     </nav>
 
-    <main class="container">
-        
-        <!-- SETUP SCREEN -->
+    <!-- WRITING OVERLAY -->
+    <div id="writing-overlay" class="writing-overlay">
+        <div class="pencil-anim">✍️</div>
+        <h2 style="margin-top: 2rem;">Writing your content...</h2>
+        <p style="color: var(--text-secondary);">Using Groq Intelligence ⚡</p>
+    </div>
+
+    <!-- SCREENS -->
+    <main>
+        <!-- 1. SETUP -->
         <section id="screen-setup" class="screen">
-            <div class="card" style="padding: 2.5rem; cursor: default; border: 1px solid #333;">
-                <h2 style="font-size: 2rem; margin-bottom: 1rem;">Set Up Your Business</h2>
-                <div class="input-group" style="text-align: left; width: 100%;">
+            <div class="logo-box">
+                <h1>CaptionBuddy</h1>
+                <p>AI content for your business</p>
+            </div>
+            <div class="setup-card glass">
+                <h3 style="font-size: 1.8rem; margin-bottom: 0.5rem;">Let's set up your business</h3>
+                <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 2rem;">Takes 30 seconds. Just once.</p>
+                
+                <div class="input-wrap">
                     <label>Business Name</label>
-                    <input type="text" id="biz-name" placeholder="e.g. Royal Punjab Restaurant">
+                    <input type="text" id="setup-name" placeholder="e.g. Royal Punjab Restaurant">
                 </div>
-                <div class="input-group" style="text-align: left; width: 100%;">
-                    <label>Business Type</label>
-                    <select id="biz-type">
-                        <option value="Restaurant">Restaurant</option>
-                        <option value="Salon">Salon / Spa</option>
-                        <option value="Gym">Gym & Fitness</option>
-                        <option value="Boutique">Fashion Boutique</option>
-                        <option value="General Shop">Retail Shop</option>
-                        <option value="Other">Other</option>
-                    </select>
+
+                <label style="margin-bottom: 10px;">Business Type</label>
+                <div class="type-grid" id="setup-type-grid">
+                    <div class="type-item" onclick="selectType(this, 'Restaurant')"><span>🍽️</span><span>Restaurant</span></div>
+                    <div class="type-item" onclick="selectType(this, 'Salon')"><span>💇</span><span>Salon</span></div>
+                    <div class="type-item" onclick="selectType(this, 'Gym')"><span>🏋️</span><span>Gym</span></div>
+                    <div class="type-item" onclick="selectType(this, 'Boutique')"><span>👗</span><span>Boutique</span></div>
+                    <div class="type-item" onclick="selectType(this, 'Shop')"><span>🛒</span><span>Shop</span></div>
+                    <div class="type-item" onclick="selectType(this, 'Clinic')"><span>🏥</span><span>Clinic</span></div>
+                    <div class="type-item" onclick="selectType(this, 'Coaching')"><span>🎓</span><span>Coaching</span></div>
+                    <div class="type-item" onclick="selectType(this, 'Other')"><span>✂️</span><span>Other</span></div>
                 </div>
-                <div class="input-group" style="text-align: left; width: 100%;">
-                    <label>Default Language</label>
-                    <select id="biz-lang">
-                        <option value="English">English</option>
-                        <option value="Hindi">Hindi</option>
-                        <option value="Hinglish">Hinglish</option>
-                    </select>
+
+                <label style="margin-bottom: 10px;">Content Language</label>
+                <div class="pill-row">
+                    <div class="pill setup-lang-pill selected" onclick="selectSetupLang(this, 'English')">English</div>
+                    <div class="pill setup-lang-pill" onclick="selectSetupLang(this, 'Hindi')">Hindi</div>
+                    <div class="pill setup-lang-pill" onclick="selectSetupLang(this, 'Hinglish')">Hinglish</div>
                 </div>
-                <button class="btn" onclick="saveSetup()">Set Up My Business →</button>
+
+                <button class="btn btn-primary shimmer" style="width: 100%; margin-top: 1rem;" onclick="finalizeSetup()">Let's Go →</button>
             </div>
         </section>
 
-        <!-- DASHBOARD -->
+        <!-- 2. DASHBOARD -->
         <section id="screen-dashboard" class="screen">
-            <div class="dash-header-flex">
-                <div class="welcome-header">
-                    <p style="color: var(--accent-color); font-weight: 600;">Welcome back,</p>
-                    <h2 style="font-size: 2.2rem; line-height: 1;">
-                        <span id="display-biz-name">Business Name</span><span id="dash-pro-badge" class="pro-badge" style="display:none">⭐ PRO</span>
-                    </h2>
-                    <div class="usage-text-dash" id="usage-dash">Free: 9/9 left</div>
-                </div>
-                <div class="header-actions">
-                    <button class="icon-btn" onclick="showHistory()" title="History">📋</button>
-                    <button class="icon-btn" onclick="showSettings()" title="Settings">⚙️</button>
-                </div>
+            <div class="greeting-section">
+                <h2 id="greet-text">Good Morning! ☀️</h2>
+                <p>What do you want to create today?</p>
             </div>
 
-            <div class="grid-container">
-                <div class="card" onclick="openGenerator('WhatsApp Broadcast', '📱')">
-                    <div class="card-icon" style="background: rgba(37, 211, 102, 0.1); color: var(--whatsapp);">📱</div>
-                    <h3>WhatsApp Broadcast</h3>
+            <div id="usage-banner" class="usage-banner usage-green">
+                ✨ <span id="usage-count-text">9 generations remaining</span>
+            </div>
+
+            <div class="main-grid">
+                <div class="content-card glass" onclick="openGen('WhatsApp Broadcast', '📱')">
+                    <span class="emoji">📱</span>
+                    <h4>WhatsApp</h4>
+                    <p>Send to all your customers</p>
+                    <span class="arrow">→</span>
                 </div>
-                <div class="card" onclick="openGenerator('Instagram Caption', '📸')">
-                    <div class="card-icon" style="background: rgba(228, 64, 95, 0.1); color: var(--instagram);">📸</div>
-                    <h3>Instagram Caption</h3>
+                <div class="content-card glass" onclick="openGen('Instagram Caption', '📸')">
+                    <span class="emoji">📸</span>
+                    <h4>Instagram</h4>
+                    <p>With hashtags included</p>
+                    <span class="arrow">→</span>
                 </div>
-                <div class="card" onclick="openGenerator('Festival/Offer Post', '🎉')">
-                    <div class="card-icon" style="background: rgba(255, 215, 0, 0.1); color: var(--festival);">🎉</div>
-                    <h3>Festival/Offer</h3>
+                <div class="content-card glass" onclick="openGen('Festival Offer', '🎉')">
+                    <span class="emoji">🎉</span>
+                    <h4>Festival</h4>
+                    <p>Never miss a celebration</p>
+                    <span class="arrow">→</span>
                 </div>
-                <div class="card" onclick="openGenerator('New Arrival', '🆕')">
-                    <div class="card-icon" style="background: rgba(0, 122, 255, 0.1); color: var(--new-arrival);">🆕</div>
-                    <h3>New Arrival</h3>
+                <div class="content-card glass" onclick="openGen('New Arrival', '🆕')">
+                    <span class="emoji">🆕</span>
+                    <h4>Arrival</h4>
+                    <p>Launch with excitement</p>
+                    <span class="arrow">→</span>
                 </div>
-                <div class="card" onclick="openGenerator('Review Reply', '⭐')">
-                    <div class="card-icon" style="background: rgba(175, 82, 222, 0.1); color: var(--review);">⭐</div>
-                    <h3>Review Reply</h3>
+                <div class="content-card glass" onclick="openGen('Review Reply', '⭐')">
+                    <span class="emoji">⭐</span>
+                    <h4>Reviews</h4>
+                    <p>Respond professionally</p>
+                    <span class="arrow">→</span>
                 </div>
-                <div class="card" onclick="resetApp()" style="border-style: dashed;">
-                    <div class="card-icon" style="background: rgba(255, 59, 48, 0.1); color: var(--reset);">🔄</div>
-                    <h3>Reset App</h3>
+                <div class="content-card glass" onclick="showScreen('history')">
+                    <span class="emoji">📋</span>
+                    <h4>History</h4>
+                    <p>Your past generations</p>
+                    <span class="arrow">→</span>
                 </div>
             </div>
         </section>
 
-        <!-- SETTINGS SCREEN -->
-        <section id="screen-settings" class="screen">
-            <div class="gen-header">
-                <button class="back-btn" onclick="showDashboard()">← Back</button>
-                <h3 style="font-size: 1.5rem;">Settings</h3>
-            </div>
-            <div class="output-card" style="margin-top: 1rem;">
-                <p><strong>Business:</strong> <span id="settings-biz-name"></span></p>
-                <p><strong>Type:</strong> <span id="settings-biz-type"></span></p>
-                <p><strong>Status:</strong> <span id="settings-pro-status">Free Tier</span></p>
-            </div>
-            <button class="btn btn-outline" onclick="navigateTo('screen-setup')">✏️ Edit Business Info</button>
-            <button class="btn btn-pro" id="settings-unlock-pro-btn" style="margin-top: 10px;" onclick="openUpgradeModal()">🔑 Enter Pro Code</button>
-        </section>
-
-        <!-- HISTORY SCREEN -->
-        <section id="screen-history" class="screen">
-            <div class="gen-header">
-                <button class="back-btn" onclick="showDashboard()">← Back</button>
-                <h3 style="font-size: 1.5rem;">Your History</h3>
-            </div>
-            <div id="history-list"></div>
-            <button class="action-btn" style="width:100%; margin-top: 2rem; padding: 15px;" onclick="clearHistory()">🗑️ Clear All History</button>
-        </section>
-
-        <!-- GENERATOR -->
+        <!-- 3. GENERATOR -->
         <section id="screen-generator" class="screen">
             <div class="gen-header">
-                <button class="back-btn" onclick="showDashboard()">← Back</button>
-                <span class="usage-badge" id="usage-text-gen">Free: 9/9 left</span>
-            </div>
-
-            <h2 id="selected-type-title" style="font-size: 2rem; margin-bottom: 1.5rem;">Content Type</h2>
-
-            <div class="input-group">
-                <label>What's the post about?</label>
-                <textarea id="prompt-input" rows="3" placeholder="Describe your post in one line..."></textarea>
-            </div>
-
-            <label>Tone</label>
-            <div class="pill-container" id="tone-pills">
-                <div class="pill active" onclick="selectPill(this, 'tone')">Professional</div>
-                <div class="pill" onclick="selectPill(this, 'tone')">Friendly</div>
-                <div class="pill" onclick="selectPill(this, 'tone')">Exciting</div>
-                <div class="pill" onclick="selectPill(this, 'tone')">Festive</div>
-            </div>
-
-            <label>Language</label>
-            <div class="pill-container" id="lang-pills">
-                <div class="pill" onclick="selectPill(this, 'lang')">English</div>
-                <div class="pill" onclick="selectPill(this, 'lang')">Hindi</div>
-                <div class="pill active" onclick="selectPill(this, 'lang')">Hinglish</div>
-            </div>
-
-            <button class="btn" onclick="handleGeneration()" id="gen-btn">Generate Content ✨</button>
-
-            <div id="results-area" class="output-container">
-                <div id="loading-indicator">
-                    <span class="loading-text">✍️ Writing your content...</span>
-                    <div class="shimmer"></div>
-                    <div class="shimmer"></div>
-                    <div class="shimmer"></div>
+                <div onclick="showScreen('dashboard')" style="cursor: pointer; display: flex; align-items: center; gap: 5px; color: var(--accent);">
+                    ← <span style="font-weight: 700; font-size: 0.9rem;">Back</span>
                 </div>
-                <div id="ai-results-wrapper"></div>
-                <button id="copy-all-btn" class="btn" style="background: #333; color: white; margin-top: 1rem; display: none;" onclick="copyAll()">📋 Copy All 3 Variations</button>
+                <div id="gen-usage-pill" class="usage-badge">9/9 free</div>
+            </div>
+
+            <h2 id="gen-title" style="font-size: 2.2rem; margin-bottom: 1.5rem;">📱 WhatsApp Broadcast</h2>
+
+            <div class="tab-switcher">
+                <div class="tab active" id="tab-desc-trigger" onclick="switchGenTab('describe')">✏️ Describe</div>
+                <div class="tab" id="tab-photo-trigger" onclick="switchGenTab('photo')">📸 Photo</div>
+            </div>
+
+            <!-- Describe Tab -->
+            <div id="tab-describe" class="gen-tab-content">
+                <div class="input-wrap" style="background: var(--bg-secondary); border-radius: 18px; padding: 1rem; border: 1px solid var(--border);">
+                    <label>Describe your post</label>
+                    <textarea id="gen-prompt" style="background: transparent; border: none; width: 100%; height: 120px; resize: none; color: white; font-size: 1rem; margin-top: 10px;" placeholder="e.g. Sunday special thali for ₹199"></textarea>
+                </div>
+            </div>
+
+            <!-- Photo Tab -->
+            <div id="tab-photo" class="gen-tab-content" style="display: none;">
+                <div class="upload-area" onclick="document.getElementById('photo-input').click()">
+                    <i class="icon-camera">📸</i>
+                    <h4 style="margin-bottom: 5px;">Snap or Upload Photo</h4>
+                    <p style="font-size: 0.75rem; color: var(--text-muted);">AI will analyze and write the draft</p>
+                    <input type="file" id="photo-input" accept="image/*" style="display: none;" onchange="processPhoto(this)">
+                </div>
+                <div id="photo-preview-box" style="display: none; margin-top: 1rem; text-align: center;">
+                    <img id="photo-preview-img" src="" style="width: 100px; height: 100px; border-radius: 12px; object-fit: cover;">
+                    <p style="color: var(--accent); font-weight: 700; font-size: 0.8rem; margin-top: 5px;">Photo selected ✅</p>
+                </div>
+            </div>
+
+            <label style="margin: 1.5rem 0 10px; display: block;">Select Tone</label>
+            <div class="pill-row" id="tone-pills">
+                <div class="pill selected" onclick="selectPill(this, 'tone')">😊 Friendly</div>
+                <div class="pill" onclick="selectPill(this, 'tone')">💼 Professional</div>
+                <div class="pill" onclick="selectPill(this, 'tone')">🎉 Exciting</div>
+                <div class="pill" onclick="selectPill(this, 'tone')">🙏 Festive</div>
+                <div class="pill" onclick="selectPill(this, 'tone')">😂 Funny</div>
+            </div>
+
+            <label style="margin-bottom: 10px; display: block;">Select Language</label>
+            <div class="pill-row" id="lang-pills">
+                <div class="pill selected" onclick="selectPill(this, 'lang')">English</div>
+                <div class="pill" onclick="selectPill(this, 'lang')">Hindi</div>
+                <div class="pill" onclick="selectPill(this, 'lang')">Hinglish</div>
+            </div>
+
+            <button class="btn btn-primary shimmer" style="width: 100%;" onclick="startGeneration()">✨ Generate Content</button>
+        </section>
+
+        <!-- 4. RESULTS -->
+        <section id="screen-results" class="screen">
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem;">
+                <div>
+                    <h2 style="font-size: 2.2rem; line-height: 1;">✨ Your Content!</h2>
+                    <p style="color: var(--text-secondary); font-size: 0.85rem;">Pick your favorite to share</p>
+                </div>
+                <button class="btn btn-ghost" style="padding: 8px 12px; font-size: 0.75rem;" onclick="startGeneration()">↺ Regen All</button>
+            </div>
+
+            <div id="results-list">
+                <!-- Variations injected here -->
+            </div>
+
+            <button class="btn btn-ghost" style="width: 100%;" onclick="showScreen('dashboard')">← New Creation</button>
+        </section>
+
+        <!-- 5. HISTORY -->
+        <section id="screen-history" class="screen">
+            <h2 style="font-size: 2.5rem; margin-bottom: 1.5rem;">📋 Your History</h2>
+            <div id="history-items">
+                <!-- History list -->
+            </div>
+            
+            <div id="history-empty" style="text-align: center; padding-top: 5rem; display: none;">
+                <div style="font-size: 4rem; opacity: 0.2;">📋</div>
+                <h3 style="margin-top: 1rem; opacity: 0.5;">No history yet!</h3>
+                <button class="btn btn-primary" style="margin: 1.5rem auto;" onclick="showScreen('dashboard')">Create First Post</button>
+            </div>
+        </section>
+
+        <!-- 6. SETTINGS -->
+        <section id="screen-settings" class="screen">
+            <h2 style="font-size: 2.5rem; margin-bottom: 2rem;">⚙️ Settings</h2>
+            
+            <div class="setup-card glass" style="margin-bottom: 1.5rem;">
+                <h4 class="display-font" style="color: var(--accent); margin-bottom: 1rem;">Business Profile</h4>
+                <div class="input-wrap">
+                    <label>Business Name</label>
+                    <input type="text" id="settings-name">
+                </div>
+                <p style="font-size: 0.8rem; color: var(--text-muted);">Plan: <span id="settings-plan-tag">Free User</span></p>
+            </div>
+
+            <button class="btn btn-primary shimmer" id="settings-upgrade-btn" style="margin-bottom: 1rem;" onclick="toggleModal(true)">Upgrade to Pro →</button>
+            <button class="btn btn-ghost" style="width: 100%; margin-bottom: 3rem;" onclick="resetApp()">Reset Everything</button>
+            
+            <div style="text-align: center; color: var(--text-muted); font-size: 0.75rem;">
+                CaptionBuddy v2.0<br>Made for Indian Businesses 🇮🇳
             </div>
         </section>
     </main>
 
+    <!-- BOTTOM NAV -->
+    <div id="bottom-nav" class="bottom-nav">
+        <div class="nav-item active" onclick="showScreen('dashboard')"><i>🏠</i><span>Home</span></div>
+        <div class="nav-item" onclick="openGen('WhatsApp Broadcast', '📱')"><i>✍️</i><span>Create</span></div>
+        <div class="nav-item" onclick="showScreen('history')"><i>📋</i><span>History</span></div>
+        <div class="nav-item" onclick="showScreen('settings')"><i>⚙️</i><span>Settings</span></div>
+    </div>
+
+    <!-- TOAST -->
+    <div id="toast">✅ Action Successful</div>
+
     <!-- UPGRADE MODAL -->
-    <div class="modal-overlay" id="upgrade-modal">
-        <div class="modal modal-pro">
-            <h2 style="font-size: 2.2rem; margin-bottom: 10px;">Upgrade to Pro! 🚀</h2>
-            <p style="color: var(--text-dim); margin-bottom: 20px;">Get unlimited content and unlock all premium features for your business.</p>
+    <div id="upgrade-modal" class="modal-overlay">
+        <div class="modal-card glass">
+            <div style="position: absolute; top: 20px; right: 20px; font-size: 1.5rem; cursor: pointer;" onclick="toggleModal(false)">✕</div>
+            <h2 style="font-size: 2.5rem;">🚀 UPGRADE TO PRO</h2>
+            <div class="price-tag">₹299<span style="font-size: 1rem; color: var(--text-secondary);">/mo</span></div>
             
-            <div id="modal-options">
-                <button class="btn" onclick="contactWhatsApp()">💬 Contact on WhatsApp</button>
-                <button class="btn btn-outline" onclick="showCodeInput()">🔑 I have a Pro Code</button>
+            <div style="text-align: left; margin: 2rem 0; display: grid; gap: 12px; font-size: 0.9rem;">
+                <div>✨ Unlimited Generations</div>
+                <div>✨ Full History Access</div>
+                <div>✨ All Languages Unlocked</div>
+                <div>✨ AI Photo Analysis</div>
             </div>
 
-            <div id="pro-code-input-area">
-                <input type="text" id="pro-code-entry" placeholder="Enter Code (e.g.JOQ890JL)" style="text-align: center; margin-bottom: 10px;">
-                <button class="btn btn-pro" onclick="validateProCode()">Unlock Pro →</button>
-                <button class="back-btn" style="margin-top: 10px;" onclick="hideCodeInput()">← Back</button>
+            <button class="btn btn-primary" style="width: 100%;" onclick="buyPro()">💬 Get Pro on WhatsApp</button>
+            
+            <div style="margin-top: 1.5rem;">
+                <input type="text" id="pro-code-input" placeholder="Enter Pro Code" style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; border: 1px solid var(--border); width: 100%; text-align: center; color: white;">
+                <button class="btn btn-ghost" style="width: 100%; margin-top: 8px;" onclick="validateProCode()">Unlock Pro 🔑</button>
             </div>
-
-            <button class="back-btn" style="margin-top: 25px; width: 100%; color: #888;" onclick="closeModal()">Maybe later</button>
         </div>
     </div>
 
-    <!-- CELEBRATION -->
-    <div id="celebration-screen">
-        <h1 style="font-size: 4rem; color: var(--pro-gold); margin-bottom: 0;">⭐ WELCOME TO PRO!</h1>
-        <p style="font-size: 1.5rem; font-weight: 700;">Unlimited generations unlocked!</p>
-        <div id="confetti-box"></div>
-    </div>
-
-    <div id="toast">✅ Copied to clipboard!</div>
-
     <script>
-        const WHATSAPP_PRO_NUMBER = "918076514639"; 
-        const MAX_FREE_USES = 9;
-        const PRO_CODES = ["CGSTRWO002", "CBPRO003", "CBPROHJU4", "CBPRRWTY5", "CBPRO006", "CBPXNWSN07", "CBPROGXWU8", "CBPRO009", "CBPRO010"];
+        // --- CONSTANTS ---
+        const PRO_CODES = ["CBPRO001", "CBPRO002", "CBPRO100"];
+        const WHATSAPP_NUMBER = "919999999999"; // Replace with your number
+        const MAX_FREE = 9;
 
-        let lastInputState = { type: "", desc: "", tone: "", lang: "" };
+        // --- STATE ---
+        let currentBusinessType = "";
+        let currentScreen = "setup";
+        let isPro = localStorage.getItem('cb_pro') === 'true';
 
-        const bizData = () => JSON.parse(localStorage.getItem('captionBuddyBiz'));
-        const getUsage = () => parseInt(localStorage.getItem('cb_uses_count')) || 0;
-        const getHistory = () => JSON.parse(localStorage.getItem('cb_history')) || [];
-        const isPro = () => localStorage.getItem('cb_pro') === "true";
-
+        // --- INIT ---
         window.onload = () => {
+            const biz = JSON.parse(localStorage.getItem('cb_biz'));
+            if (biz) {
+                showScreen('dashboard');
+                applyBizData(biz);
+            } else {
+                showScreen('setup');
+                document.getElementById('bottom-nav').style.display = 'none';
+            }
             updateUsageUI();
-            if (bizData()) showDashboard();
-            else navigateTo('screen-setup');
+            setDynamicGreeting();
         };
 
-        function navigateTo(screenId) {
+        // --- NAVIGATION ---
+        function showScreen(screenId) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(screenId).classList.add('active');
+            document.getElementById(`screen-${screenId}`).classList.add('active');
+            
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            const index = ['dashboard', 'generator', 'history', 'settings'].indexOf(screenId);
+            if (index > -1) document.querySelectorAll('.nav-item')[index].classList.add('active');
+            
+            if (screenId === 'history') renderHistory();
+            if (screenId === 'setup') document.getElementById('bottom-nav').style.display = 'none';
+            else document.getElementById('bottom-nav').style.display = 'flex';
+            
             window.scrollTo(0,0);
         }
 
-        function showDashboard() {
-            const data = bizData();
-            document.getElementById('display-biz-name').innerText = data.name;
-            document.getElementById('dash-pro-badge').style.display = isPro() ? 'inline-block' : 'none';
-            updateUsageUI();
-            navigateTo('screen-dashboard');
+        // --- SETUP LOGIC ---
+        function selectType(el, type) {
+            document.querySelectorAll('.type-item').forEach(i => i.classList.remove('selected'));
+            el.classList.add('selected');
+            currentBusinessType = type;
         }
 
-        function updateUsageUI() {
-            const usageTextGen = document.getElementById('usage-text-gen');
-            const usageDash = document.getElementById('usage-dash');
+        function selectSetupLang(el, lang) {
+            document.querySelectorAll('.setup-lang-pill').forEach(p => p.classList.remove('selected'));
+            el.classList.add('selected');
+        }
 
-            if (isPro()) {
-                const proTxt = "⭐ Pro — Unlimited generations";
-                usageTextGen.innerText = proTxt;
-                usageDash.innerText = proTxt;
-                usageTextGen.style.color = "#25D366";
-                usageDash.style.color = "#25D366";
-                usageTextGen.style.borderColor = "#ffd700";
+        function finalizeSetup() {
+            const name = document.getElementById('setup-name').value;
+            const lang = document.querySelector('.setup-lang-pill.selected').innerText;
+            if (!name || !currentBusinessType) {
+                showToast("Please fill all details", true);
+                return;
+            }
+            const biz = { name, type: currentBusinessType, lang };
+            localStorage.setItem('cb_biz', JSON.stringify(biz));
+            applyBizData(biz);
+            showScreen('dashboard');
+        }
+
+        function applyBizData(biz) {
+            document.getElementById('biz-name-display').innerText = biz.name;
+            document.getElementById('settings-name').value = biz.name;
+            if (isPro) {
+                document.getElementById('pro-badge').style.display = 'block';
+                document.getElementById('settings-plan-tag').innerText = "⭐ Pro Member";
+                document.getElementById('settings-upgrade-btn').style.display = 'none';
+            }
+        }
+
+        // --- GENERATOR LOGIC ---
+        function openGen(type, emoji) {
+            document.getElementById('gen-title').innerText = `${emoji} ${type}`;
+            document.getElementById('gen-prompt').value = "";
+            document.getElementById('photo-preview-box').style.display = 'none';
+            switchGenTab('describe');
+            
+            const biz = JSON.parse(localStorage.getItem('cb_biz'));
+            const prompts = {
+                'WhatsApp Broadcast': `e.g. Sunday special thali for ₹199 at ${biz.name}`,
+                'Instagram Caption': `e.g. New items added to the menu at ${biz.name}`,
+                'Festival Offer': `e.g. Diwali 20% discount on all services`,
+                'New Arrival': `e.g. Our new winter collection is now live`,
+                'Review Reply': `e.g. Thank a customer named Rahul for a 5-star review`
+            };
+            document.getElementById('gen-prompt').placeholder = prompts[type] || "Describe your post...";
+            showScreen('generator');
+        }
+
+        function switchGenTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.gen-tab-content').forEach(c => c.style.display = 'none');
+            
+            if (tab === 'describe') {
+                document.getElementById('tab-desc-trigger').classList.add('active');
+                document.getElementById('tab-describe').style.display = 'block';
+            } else {
+                if (!isPro) { toggleModal(true); return; }
+                document.getElementById('tab-photo-trigger').classList.add('active');
+                document.getElementById('tab-photo').style.display = 'block';
+            }
+        }
+
+        function selectPill(el, group) {
+            el.parentElement.querySelectorAll('.pill').forEach(p => p.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+
+        // --- PHOTO ANALYZE ---
+        async function processPhoto(input) {
+            if (!input.files || !input.files[0]) return;
+            
+            const file = input.files[0];
+            const reader = new FileReader();
+            
+            document.getElementById('writing-overlay').style.display = 'flex';
+            document.querySelector('#writing-overlay h2').innerText = "Analyzing Photo...";
+
+            reader.onload = async (e) => {
+                const base64 = e.target.result;
+                document.getElementById('photo-preview-img').src = base64;
+                document.getElementById('photo-preview-box').style.display = 'block';
+
+                try {
+                    const biz = JSON.parse(localStorage.getItem('cb_biz'));
+                    const res = await fetch('/api/generate', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            type: "analyze_image",
+                            image: base64,
+                            businessType: biz.type,
+                            model: "meta-llama/llama-4-scout-17b-16e-instruct"
+                        })
+                    });
+                    const data = await res.json();
+                    document.getElementById('gen-prompt').value = data.result;
+                    switchGenTab('describe');
+                    showToast("Photo analyzed! ✨");
+                } catch (err) {
+                    showToast("Analysis failed", true);
+                } finally {
+                    document.getElementById('writing-overlay').style.display = 'none';
+                    document.querySelector('#writing-overlay h2').innerText = "Writing your content...";
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // --- CORE GENERATION ---
+        async function startGeneration() {
+            const used = parseInt(localStorage.getItem('cb_usage') || 0);
+            if (!isPro && used >= MAX_FREE) {
+                toggleModal(true);
                 return;
             }
 
-            const rem = Math.max(0, MAX_FREE_USES - getUsage());
-            const text = `Free: ${rem}/${MAX_FREE_USES} left`;
-            usageTextGen.innerText = text;
-            usageDash.innerText = text;
+            const prompt = document.getElementById('gen-prompt').value;
+            if (!prompt) {
+                showToast("Please describe the post", true);
+                return;
+            }
 
-            let color = "#25D366";
-            if (rem <= 3) color = "#FFD700";
-            if (rem === 0) color = "#FF3B30";
-            usageTextGen.style.color = color;
-            usageDash.style.color = color;
-            usageTextGen.style.borderColor = color;
+            const type = document.getElementById('gen-title').innerText;
+            const tone = document.querySelector('#tone-pills .selected').innerText;
+            const lang = document.querySelector('#lang-pills .selected').innerText;
+            const biz = JSON.parse(localStorage.getItem('cb_biz'));
+
+            document.getElementById('writing-overlay').style.display = 'flex';
+
+            const fullPrompt = `Write 3 marketing variations for ${biz.name} (${biz.type}). 
+            Topic: ${prompt}. Tone: ${tone}. Language: ${lang}. Type: ${type}. 
+            Format: Separate each with [[SEP]]`;
+
+            try {
+                const res = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: fullPrompt })
+                });
+                const data = await res.json();
+                const variations = data.result.split('[[SEP]]').filter(v => v.trim()).slice(0, 3);
+                
+                renderResults(variations);
+                saveHistory(type, variations[0], variations, tone, lang);
+                
+                if (!isPro) localStorage.setItem('cb_usage', used + 1);
+                updateUsageUI();
+                showScreen('results');
+            } catch (err) {
+                showToast("Generation failed", true);
+            } finally {
+                document.getElementById('writing-overlay').style.display = 'none';
+            }
         }
 
-        // --- PRO LOGIC ---
-        function openUpgradeModal() {
-            document.getElementById('upgrade-modal').style.display = 'flex';
-            hideCodeInput();
+        function renderResults(arr) {
+            const container = document.getElementById('results-list');
+            container.innerHTML = "";
+            arr.forEach((text, i) => {
+                const card = document.createElement('div');
+                card.className = "result-card glass";
+                card.innerHTML = `
+                    <div class="result-badge">${i+1}</div>
+                    <div class="result-text">${text.trim()}</div>
+                    <div class="result-meta">
+                        <span>📝 ${text.length} chars</span>
+                        <span>📖 ${text.split(/\s+/).length} words</span>
+                    </div>
+                    <div class="result-actions">
+                        <button class="act-btn act-wa" onclick="shareWA('${encodeURIComponent(text.trim())}')">📱 WhatsApp</button>
+                        <button class="act-btn act-ig" onclick="shareIG('${encodeURIComponent(text.trim())}')">📸 Instagram</button>
+                        <button class="act-btn act-copy" onclick="copyResult(this)">📋 Copy</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
         }
 
-        function showCodeInput() {
-            document.getElementById('modal-options').style.display = 'none';
-            document.getElementById('pro-code-input-area').style.display = 'block';
+        // --- SHARING ---
+        function shareWA(txt) {
+            showToast("✅ Opening WhatsApp...");
+            setTimeout(() => {
+                window.open(`whatsapp://send?text=${txt}`);
+            }, 500);
         }
 
-        function hideCodeInput() {
-            document.getElementById('modal-options').style.display = 'flex';
-            document.getElementById('pro-code-input-area').style.display = 'none';
+        function shareIG(txt) {
+            navigator.clipboard.writeText(decodeURIComponent(txt));
+            showToast("📋 Caption copied! Instagram opening...", false, 4000);
+            setTimeout(() => {
+                window.open('instagram://');
+            }, 800);
         }
 
-        function contactWhatsApp() {
-            const biz = bizData();
-            const msg = `Hi! I want to upgrade CaptionBuddy to Pro. Business: ${biz.name}`;
-            window.open(`https://wa.me/${WHATSAPP_PRO_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+        function copyResult(btn) {
+            const txt = btn.closest('.result-card').querySelector('.result-text').innerText;
+            navigator.clipboard.writeText(txt);
+            showToast("✅ Copied!");
+        }
+
+        // --- HISTORY ---
+        function saveHistory(type, preview, full, tone, lang) {
+            const hist = JSON.parse(localStorage.getItem('cb_history') || '[]');
+            hist.unshift({ type, preview, full, tone, lang, time: Date.now() });
+            localStorage.setItem('cb_history', JSON.stringify(hist.slice(0, 20)));
+        }
+
+        function renderHistory() {
+            const hist = JSON.parse(localStorage.getItem('cb_history') || '[]');
+            const container = document.getElementById('history-items');
+            const empty = document.getElementById('history-empty');
+            
+            container.innerHTML = "";
+            if (hist.length === 0) {
+                empty.style.display = 'block';
+                return;
+            }
+            empty.style.display = 'none';
+
+            hist.forEach(item => {
+                const div = document.createElement('div');
+                div.className = "history-item glass";
+                div.onclick = () => {
+                    renderResults(item.full);
+                    showScreen('results');
+                };
+                div.innerHTML = `
+                    <div class="hist-icon">${item.type.includes('WhatsApp') ? '📱' : '📸'}</div>
+                    <div class="hist-info">
+                        <h5>${item.type}</h5>
+                        <p>${item.preview}</p>
+                        <div style="font-size: 0.6rem; color: var(--accent); margin-top: 4px;">${formatRelativeTime(item.time)} • ${item.lang}</div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // --- UI HELPERS ---
+        function showToast(msg, isError = false, duration = 2000) {
+            const t = document.getElementById('toast');
+            t.innerText = msg;
+            t.style.background = isError ? var(--red) : "white";
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), duration);
+        }
+
+        function toggleModal(show) {
+            document.getElementById('upgrade-modal').style.display = show ? 'flex' : 'none';
         }
 
         function validateProCode() {
-            const codeInput = document.getElementById('pro-code-entry');
-            const code = codeInput.value.trim().toUpperCase();
-            const usedCodes = JSON.parse(localStorage.getItem('cb_used_codes')) || [];
-
+            const code = document.getElementById('pro-code-input').value.toUpperCase();
             if (PRO_CODES.includes(code)) {
-                if (usedCodes.includes(code)) {
-                    alert("❌ This code has already been used. Contact us for a new code.");
-                } else {
-                    // Success
-                    localStorage.setItem('cb_pro', "true");
-                    usedCodes.push(code);
-                    localStorage.setItem('cb_used_codes', JSON.stringify(usedCodes));
-                    triggerCelebration();
-                }
+                isPro = true;
+                localStorage.setItem('cb_pro', 'true');
+                toggleModal(false);
+                showToast("🎉 WELCOME TO PRO!");
+                location.reload();
             } else {
-                alert("❌ Invalid code. Contact us on WhatsApp to get yours.");
+                showToast("Invalid Code", true);
             }
         }
 
-        function triggerCelebration() {
-            closeModal();
-            const screen = document.getElementById('celebration-screen');
-            const box = document.getElementById('confetti-box');
-            screen.style.display = 'flex';
-            
-            // Generate simple CSS confetti
-            for (let i = 0; i < 50; i++) {
-                const c = document.createElement('div');
-                c.className = 'confetti';
-                c.style.left = Math.random() * 100 + 'vw';
-                c.style.backgroundColor = ['#ffd700', '#25D366', '#ffffff'][Math.floor(Math.random() * 3)];
-                c.style.animationDuration = (Math.random() * 2 + 1) + 's';
-                c.style.animationDelay = Math.random() * 2 + 's';
-                box.appendChild(c);
+        function buyPro() {
+            const biz = JSON.parse(localStorage.getItem('cb_biz'));
+            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=Hi! I want to upgrade CaptionBuddy to Pro. Business: ${biz.name}`);
+        }
+
+        function updateUsageUI() {
+            const used = parseInt(localStorage.getItem('cb_usage') || 0);
+            const rem = Math.max(0, MAX_FREE - used);
+            const banner = document.getElementById('usage-banner');
+            const txt = document.getElementById('usage-count-text');
+            const pill = document.getElementById('gen-usage-pill');
+
+            if (isPro) {
+                banner.className = "usage-banner usage-green";
+                txt.innerText = "⭐ Pro — Unlimited generations";
+                pill.innerText = "PRO";
+                return;
             }
 
-            setTimeout(() => {
-                screen.style.display = 'none';
-                box.innerHTML = '';
-                showDashboard();
-            }, 2500);
+            txt.innerText = `${rem} generations remaining`;
+            pill.innerText = `${rem}/${MAX_FREE} free`;
+
+            if (rem > 3) banner.className = "usage-banner usage-green";
+            else if (rem > 0) banner.className = "usage-banner usage-yellow";
+            else banner.className = "usage-banner usage-red";
         }
 
-        // --- SETTINGS ---
-        function showSettings() {
-            const data = bizData();
-            document.getElementById('settings-biz-name').innerText = data.name;
-            document.getElementById('settings-biz-type').innerText = data.type;
-            document.getElementById('settings-pro-status').innerText = isPro() ? "⭐ Pro Active" : "Free Tier";
-            document.getElementById('settings-unlock-pro-btn').style.display = isPro() ? "none" : "block";
-            navigateTo('screen-settings');
+        function setDynamicGreeting() {
+            const hour = new Date().getHours();
+            let text = "Good Morning! ☀️";
+            if (hour >= 12 && hour < 17) text = "Good Afternoon! 🌤️";
+            else if (hour >= 17 && hour < 21) text = "Good Evening! 🌆";
+            else if (hour >= 21 || hour < 5) text = "Good Night! 🌙";
+            document.getElementById('greet-text').innerText = text;
         }
 
-        // --- CORE LOGIC ---
-        function selectPill(el, group) {
-            el.parentElement.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
-            el.classList.add('active');
+        function formatRelativeTime(timestamp) {
+            const diff = Date.now() - timestamp;
+            const mins = Math.floor(diff / 60000);
+            if (mins < 1) return "Just now";
+            if (mins < 60) return `${mins}m ago`;
+            const hours = Math.floor(mins / 60);
+            if (hours < 24) return `${hours}h ago`;
+            return new Date(timestamp).toLocaleDateString();
         }
 
-        function saveSetup() {
-            const name = document.getElementById('biz-name').value;
-            const type = document.getElementById('biz-type').value;
-            const lang = document.getElementById('biz-lang').value;
-            if (!name) return alert("Please enter business name");
-            localStorage.setItem('captionBuddyBiz', JSON.stringify({ name, type, lang }));
-            showDashboard();
-        }
-
-        function showToast(msg) {
-            const t = document.getElementById('toast');
-            t.innerText = msg;
-            t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 2000);
-        }
-
-        function saveToHistory(type, desc, variations, tone, lang) {
-            const history = getHistory();
-            const entry = { type, desc, variations, tone, lang, bizName: bizData().name, date: new Date().toLocaleString() };
-            history.unshift(entry);
-            localStorage.setItem('cb_history', JSON.stringify(history));
-        }
-
-        function showHistory() {
-            const history = getHistory();
-            const list = document.getElementById('history-list');
-            list.innerHTML = "";
-            if (history.length === 0) {
-                list.innerHTML = `<p style="text-align:center; padding: 2rem; color: var(--text-dim);">No history yet! Generate your first content 👆</p>`;
-            } else {
-                history.forEach((item, index) => {
-                    const div = document.createElement('div');
-                    div.className = "history-item";
-                    div.innerHTML = `<div class="hist-meta"><h4>${item.type}</h4><p>${item.date}</p><div class="hist-preview">"${item.variations[0].substring(0, 55)}..."</div></div><button class="action-btn" onclick="viewHistoryItem(${index})">View</button>`;
-                    list.appendChild(div);
-                });
+        function resetApp() {
+            if (confirm("Reset everything? History and settings will be lost.")) {
+                localStorage.clear();
+                location.reload();
             }
-            navigateTo('screen-history');
         }
-
-        function viewHistoryItem(index) {
-            const item = getHistory()[index];
-            lastInputState = { type: item.type, desc: item.desc, tone: item.tone, lang: item.lang };
-            document.getElementById('selected-type-title').innerText = item.type;
-            document.getElementById('prompt-input').value = item.desc;
-            const wrapper = document.getElementById('ai-results-wrapper');
-            wrapper.innerHTML = "";
-            item.variations.forEach(v => wrapper.appendChild(createResultCard(v)));
-            document.getElementById('results-area').style.display = 'block';
-            document.getElementById('copy-all-btn').style.display = 'flex';
-            navigateTo('screen-generator');
-        }
-
-        function clearHistory() { if (confirm("Delete all history permanently?")) { localStorage.removeItem('cb_history'); showHistory(); } }
-
-        function openGenerator(type, icon) {
-            lastInputState.type = type;
-            document.getElementById('selected-type-title').innerText = `${icon} ${type}`;
-            document.getElementById('prompt-input').value = "";
-            document.getElementById('results-area').style.display = 'none';
-            navigateTo('screen-generator');
-        }
-
-        async function handleGeneration() {
-            const input = document.getElementById('prompt-input');
-            const used = getUsage();
-            if (!isPro() && used >= MAX_FREE_USES) return openUpgradeModal();
-            if (!input.value.trim()) return input.classList.add('shake'), setTimeout(()=>input.classList.remove('shake'), 300);
-            
-            lastInputState.desc = input.value;
-            lastInputState.tone = document.querySelector('#tone-pills .active').innerText;
-            lastInputState.lang = document.querySelector('#lang-pills .active').innerText;
-            
-            const btn = document.getElementById('gen-btn');
-            const loader = document.getElementById('loading-indicator');
-            const wrapper = document.getElementById('ai-results-wrapper');
-            const copyAllBtn = document.getElementById('copy-all-btn');
-            
-            btn.disabled = true;
-            wrapper.innerHTML = "";
-            copyAllBtn.style.display = 'none';
-            document.getElementById('results-area').style.display = 'block';
-            loader.style.display = 'block';
-
-            try {
-                const prompt = constructAIPrompt(bizData(), lastInputState.type, lastInputState.desc, lastInputState.tone, lastInputState.lang, 3);
-                const text = await fetchGroqAI(prompt);
-                const variations = text.split('[[SEP]]').filter(v => v.trim().length > 5).slice(0, 3);
-                variations.forEach(v => wrapper.appendChild(createResultCard(v)));
-                saveToHistory(lastInputState.type, lastInputState.desc, variations, lastInputState.tone, lastInputState.lang);
-                if (!isPro()) localStorage.setItem('cb_uses_count', used + 1);
-                updateUsageUI();
-                copyAllBtn.style.display = 'flex';
-            } catch (err) { alert("Error: " + err.message); } finally { btn.disabled = false; loader.style.display = 'none'; }
-        }
-
-        function constructAIPrompt(biz, type, desc, tone, lang, count) {
-            let langRule = "";
-            if (lang === "English") langRule = "STRICT LANGUAGE RULE: Write ONLY in pure English. No Hindi words. No Hinglish. Not a single non-English word. Pure English only.";
-            else if (lang === "Hindi") langRule = "STRICT LANGUAGE RULE: Write ONLY in pure Hindi using Devanagari script (हिंदी). No English words at all. No Roman script. Pure Hindi only.";
-            else if (lang === "Hinglish") langRule = "STRICT LANGUAGE RULE: Write in Hinglish — Roman script only, naturally mixing Hindi and English words together.";
-            const rules = `Write like a real Indian business owner. Emojis naturally placed. Max 100 words. ${langRule}`;
-            return `${rules}\n\nTask: Write ${count} variation(s) for ${biz.name} (${biz.type}) about ${desc}. Tone: ${tone}. Language: ${lang}. Separate each variation with [[SEP]].\n\nREMEMBER: Follow the language rule above strictly.`;
-        }
-
-        async function fetchGroqAI(prompt) {
-            const response = await fetch("/api/generate", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ prompt })
-            });
-            const data = await response.json();
-            if (data.error) throw new Error(data.error);
-            return data.result;
-        }
-
-        function createResultCard(content) {
-            const div = document.createElement('div');
-            div.className = "output-card";
-            div.innerHTML = `<div class="output-text">${content.trim()}</div><span class="char-count">📝 ${content.trim().length} characters</span><div class="card-actions"><button class="action-btn" onclick="regenerateOne(this)">🔄</button><button class="action-btn copy" onclick="copyText(this)">Copy</button></div>`;
-            return div;
-        }
-
-        function copyText(btn) {
-            const text = btn.closest('.output-card').querySelector('.output-text').innerText;
-            navigator.clipboard.writeText(text);
-            showToast("✅ Copied to clipboard!");
-        }
-
-        function copyAll() {
-            const texts = Array.from(document.querySelectorAll('.output-text')).map(el => el.innerText);
-            navigator.clipboard.writeText(texts.join('\n\n---\n\n'));
-            showToast("✅ All 3 variations copied!");
-        }
-
-        async function regenerateOne(btn) {
-            const card = btn.closest('.output-card');
-            card.innerHTML = `<div class="shimmer" style="height:60px; margin-bottom:0;"></div>`;
-            try {
-                const prompt = constructAIPrompt(bizData(), lastInputState.type, lastInputState.desc, lastInputState.tone, lastInputState.lang, 1);
-                const text = await fetchGroqAI(prompt);
-                const newText = text.replace('[[SEP]]', '').trim();
-                card.replaceWith(createResultCard(newText));
-            } catch (err) { alert("Regen failed"); }
-        }
-
-        function resetApp() { if (confirm("Reset everything?")) { localStorage.clear(); location.reload(); } }
-        function closeModal() { document.getElementById('upgrade-modal').style.display = 'none'; }
     </script>
 </body>
 </html>
